@@ -7,7 +7,7 @@ namespace NetMentoring
     {
         private FileStream memoryStream;
         private StreamWriter streamWriter;
-        private bool _disposed=false; 
+//        private bool _disposed=false; 
 
         public MemoryStreamLogger()
         {
@@ -17,7 +17,9 @@ namespace NetMentoring
 
         public void Log(string message)
         {
-            if (_disposed) throw new ObjectDisposedException("Object Disposed");
+   //         if (_disposed) throw new ObjectDisposedException("Object Disposed");
+            if (memoryStream == null || streamWriter==null) throw new ObjectDisposedException("Object Disposed");
+            
             streamWriter.Write(message);
         }
 
@@ -29,8 +31,8 @@ namespace NetMentoring
 
         protected virtual void Dispose(bool disposing)
         {
-            if (_disposed) return;
-            if (disposing)
+//            if (_disposed) return;
+            if (disposing && streamWriter != null && memoryStream!=null)
             {
                 streamWriter.Dispose();
                 memoryStream.Dispose();
@@ -38,7 +40,7 @@ namespace NetMentoring
                 memoryStream = null;
                 streamWriter = null;
             }
-            _disposed = true;
+ //           _disposed = true;
         }
     }
 }
