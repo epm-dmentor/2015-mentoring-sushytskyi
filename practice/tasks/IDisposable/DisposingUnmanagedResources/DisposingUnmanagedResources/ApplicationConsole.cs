@@ -23,7 +23,6 @@ namespace Unmanaged
         [DllImport("kernel32.dll", SetLastError = true)]
         private static extern bool CloseHandle(IntPtr handle);
 
-
         public ApplicationConsole()
         {
             _consoleHandle = GetStdHandle(StdOutputHandle);
