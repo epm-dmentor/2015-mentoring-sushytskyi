@@ -12,7 +12,7 @@ namespace Zoo
 
         private readonly object _syncObj = new object();
         private readonly IList<ITickListener> _listeners = new List<ITickListener>();
-        public const int Interval = 1;
+        public const int Interval = 10;
 
         private readonly System.Timers.Timer tickTimer;
 

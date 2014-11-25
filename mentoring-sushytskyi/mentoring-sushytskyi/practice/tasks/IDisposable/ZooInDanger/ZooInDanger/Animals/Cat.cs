@@ -23,7 +23,7 @@ namespace Zoo.Animals
             Logger.LogYellow("Finalizing cat!");
 
             //Releasea object only in case troops number > 100
-         //   while (Zoo.Troops > 200) { }
+            while (Zoo.Troops > 200) { }
         }
     }
 }

@@ -75,15 +75,14 @@ namespace Zoo
             {
                 Interlocked.Exchange(ref _lastInfo, 0);
                 ShowStatus();
-         //       if (Troops > 100)
-               if (Troops%1000 == 0 && Troops > 0)
+                if (Troops%1000 == 0 && Troops > 0)
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("Critical troops number: {0}", Troops);
                     Console.ForegroundColor = ConsoleColor.Green;
                     Console.WriteLine("Running CG collect");
                     Console.Beep();
-                    GC.Collect(2);
+                    GC.Collect();
                     Thread.Sleep(200);
                     Console.ResetColor();
                 }

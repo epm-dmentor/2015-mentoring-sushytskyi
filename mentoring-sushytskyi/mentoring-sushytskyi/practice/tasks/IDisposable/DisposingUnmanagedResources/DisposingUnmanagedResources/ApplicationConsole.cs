@@ -3,11 +3,10 @@ using System.Runtime.InteropServices;
 
 namespace Unmanaged
 {
-    public class ApplicationConsole : IDisposable
+    public class ApplicationConsole
     {
         private const int StdOutputHandle = -11;
         private readonly IntPtr _consoleHandle;
-
 
         [DllImport("kernel32.dll", SetLastError = true)]
         private static extern IntPtr GetStdHandle(int nStdHandle);
@@ -42,26 +41,6 @@ namespace Unmanaged
             uint charsWritten;
             WriteConsole(_consoleHandle, formatedStr, (uint)formatedStr.Length, out charsWritten, IntPtr.Zero);
             WriteConsole(_consoleHandle, "\n", 1, out charsWritten, IntPtr.Zero);
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                
-            }
-            if (_consoleHandle != IntPtr.Zero)
-                CloseHandle(_consoleHandle);
-        }
-
-        ~ApplicationConsole()
-        {
-            Dispose(false);
         }
     }
 }

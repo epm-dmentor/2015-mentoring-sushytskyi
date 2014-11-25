@@ -6,11 +6,10 @@ namespace Unmanaged
     {
         public static void Main()
         {
-            for (var i = 0; i < 1000000; i++)
+            using (var console = new ApplicationConsole())
             {
-                var console = new ApplicationConsole();
-                console.WriteLine("Line number: {0}", i);
-            }
+                console.WriteLine("Line number: {0}", 0);
+            }            
             Console.ReadKey();
         }
 
