@@ -47,7 +47,6 @@
     <Compile Include="Delegates.cs" />
     <Compile Include="IBroker.cs" />
     <Compile Include="Informer.cs" />
-    <Compile Include="IStock.cs" />
     <Compile Include="IStockExchange.cs" />
     <Compile Include="IStockExchangeListener.cs" />
     <Compile Include="Program.cs" />

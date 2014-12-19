@@ -4,7 +4,7 @@ namespace Epam.NetMentoring.StockExchange
 {
    public interface IBroker:IStockExchangeListener
    {
-       IEnumerable<ActiveBuys> GetActiveBuys();
+       IEnumerable<ActiveBuy> GetActiveBuys();
        IEnumerable<ActiveSell> GetActiveSells();
        IDictionary<string, int> GetMySecurityPosition();
        decimal GetMyCashPosition();
