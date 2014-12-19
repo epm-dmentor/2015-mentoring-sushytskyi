@@ -15,6 +15,7 @@ namespace Epam.NetMentoring.StockExchange
 
         public void Buy(string securityId, int price, int amount)
         {
+            //
             StockExchange.Buy(this, securityId, amount, price);
         }
 
