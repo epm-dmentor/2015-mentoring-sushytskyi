@@ -5,7 +5,7 @@ namespace ConsoleApplication5
     public class Broker
     {
         public string BrokerName { get; set; }
-        public Market Market { get; set; }
+        public StockExchange Market { get; set; }
         public IInformer<Broker> Informer { get; set; }
 
         public Broker(string brokerName, IInformer<Broker> informer)
@@ -16,7 +16,7 @@ namespace ConsoleApplication5
 
         public void Update(object sender)
         {
-            Market = (Market)sender;
+            Market = (StockExchange)sender;
         
             Informer.PrintStat(this);
         }

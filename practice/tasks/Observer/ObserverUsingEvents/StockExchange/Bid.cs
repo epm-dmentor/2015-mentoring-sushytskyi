@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using ConsoleApplication5;
 
-namespace ConsoleApplication5
+namespace Epam.NetMentoring.StockExchange
 {
    public  class Bid
     {
@@ -11,15 +9,15 @@ namespace ConsoleApplication5
         public decimal Price{ get; set; }
         public int Amount { get; set; }
         public Broker Broker { get; set; }
-        public Guid ackquireTranId { get; set; }
+        public Guid AckquireTranId { get; set; }
 
         public Bid(string secCode, decimal price, int amount, Broker broker)
         {
-            this.Amount = amount;
-            this.Price = price;
-            this.SecCode = secCode;
+            Amount = amount;
+            Price = price;
+            SecCode = secCode;
             Broker = broker;
-            ackquireTranId = Guid.Empty;
+            AckquireTranId = Guid.Empty;
         }
     }
 }

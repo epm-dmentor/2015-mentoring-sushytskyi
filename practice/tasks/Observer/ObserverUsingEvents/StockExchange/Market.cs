@@ -1,9 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using Epam.NetMentoring.StockExchange;
 
 namespace ConsoleApplication5
 {
-    public class Market 
+
+    public interface IStockExchange
+    {
+    }
+
+    public class StockExchange : IStockExchange
     {
         public delegate void ObserverHandler(object sender);
 
@@ -50,14 +56,14 @@ namespace ConsoleApplication5
             {
                 foreach (Ask ask in _askList)
                 {
-                    if (bid.ackquireTranId == Guid.Empty)
+                    if (bid.AckquireTranId == Guid.Empty)
                         if (bid.SecCode == ask.SecCode && ask.Amount == bid.Amount && bid.Price <= ask.Price &&
                             ask.ackquireTranId == Guid.Empty)
                         {
                             var tranId = Guid.NewGuid();
 
                             ask.ackquireTranId = tranId;
-                            bid.ackquireTranId = tranId;
+                            bid.AckquireTranId = tranId;
                         }
                 }
             }

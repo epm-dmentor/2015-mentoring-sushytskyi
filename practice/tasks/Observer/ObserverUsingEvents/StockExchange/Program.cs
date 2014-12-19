@@ -6,7 +6,8 @@ namespace ConsoleApplication5
     {
         static void Main(string[] args)
         {
-            var market = new Market();
+            var market = new StockExchange();
+
             var informer = new Informer(market);
 
             var broker1 = new Broker("Broker1", informer);

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Epam.NetMentoring.StockExchange
 {
-    class Informer : IStockExchangeListener
+    class StockExchangeEventsLogger : IStockExchangeListener
     {
  
         public void OnSold(DealInfo info)

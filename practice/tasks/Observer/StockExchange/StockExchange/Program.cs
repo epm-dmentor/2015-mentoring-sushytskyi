@@ -12,10 +12,11 @@ namespace Epam.NetMentoring.StockExchange
         {
 
             IStockExchange stockExchange=new StockExchange();            
-            Informer  informer=new Informer();
+            StockExchangeEventsLogger  informer=new StockExchangeEventsLogger();
             stockExchange.Sold+= informer.OnSold;
             IBroker broker1 = new Broker(stockExchange, "Broker1");
             IBroker broker2 = new Broker(stockExchange,"Broker2");
+
             stockExchange.Register(broker1);
             stockExchange.Register(broker2);
             
