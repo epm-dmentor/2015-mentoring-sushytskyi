@@ -7,8 +7,8 @@
     <ProjectGuid>{8575C36A-85CF-46EA-9265-FAF2CBC93CEA}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ConsoleApplication5</RootNamespace>
-    <AssemblyName>ConsoleApplication5</AssemblyName>
+    <RootNamespace>Epam.NetMentoring.StockExchange</RootNamespace>
+    <AssemblyName>Epam.NetMentoring.StockExchange</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

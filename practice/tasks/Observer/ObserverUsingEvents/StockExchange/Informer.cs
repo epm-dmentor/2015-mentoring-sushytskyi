@@ -5,9 +5,9 @@ namespace ConsoleApplication5
 {
     public class Informer : IInformer<Broker>
     {
-        private Market _market;
+        private StockExchange _market;
 
-        public Informer(Market market)
+        public Informer(StockExchange market)
         {
             this._market = market;
         }
@@ -15,8 +15,8 @@ namespace ConsoleApplication5
         public void PrintStat(Broker broker)
         {
             var brokerAskList = _market.AskList.FindAll(s => s.ackquireTranId == Guid.Empty);
-            var brokerBidList = _market.BidList.FindAll(s => s.ackquireTranId == Guid.Empty);
-            var soldList = _market.BidList.FindAll(s => s.Broker == broker && s.ackquireTranId != Guid.Empty);
+            var brokerBidList = _market.BidList.FindAll(s => s.AckquireTranId == Guid.Empty);
+            var soldList = _market.BidList.FindAll(s => s.Broker == broker && s.AckquireTranId != Guid.Empty);
             var buysConfirmedlist = _market.AskList.FindAll(s => s.Broker == broker && s.ackquireTranId != Guid.Empty);
 
 
