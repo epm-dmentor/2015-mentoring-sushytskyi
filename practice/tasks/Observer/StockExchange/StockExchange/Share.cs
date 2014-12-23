@@ -11,6 +11,7 @@ namespace Epam.NetMentoring.StockExchange
        public int Ammount { get; private set; }
        public decimal Price { get; private set; }
 
+       //IT: do you need it?
        public Share()
        {
            

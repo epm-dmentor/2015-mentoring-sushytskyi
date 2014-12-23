@@ -7,6 +7,7 @@ namespace Epam.NetMentoring.StockExchange
     public class StockExchange : IStockExchange
     {
 
+        //IT: readonly?
         private List<Share> _initialOffers = new List<Share>();
         private List<SellRequest> _sellRequests = new List<SellRequest>();
         private List<ExchangeInternalAccounts> _internalAccounts = new List<ExchangeInternalAccounts>();
@@ -14,6 +15,9 @@ namespace Epam.NetMentoring.StockExchange
         public event SoldEventHandler Sold;
         public event SellingRequestedEventHandler SellingRequested;
 
+
+        //IT: make it readable and understandable.
+        //IT: advise you can split it to few method if that's possible
         public ResultCode Buy(IBroker broker, string securityId, int ammount, decimal price)
         {
             var sellFound = false;
@@ -144,20 +148,26 @@ namespace Epam.NetMentoring.StockExchange
 
         public IEnumerable<Share> GetAvailableShares()
         {
+            //IT: IReadOnlyList<Share>
             return new List<Share>(_initialOffers);
         }
 
         public BrokerAccount GetAccount(IBroker broker)
         {
             var account = _internalAccounts.Find(s => s.Broker == broker);
+            //IT: possible access breach - readonly list!
             return new BrokerAccount(account.Shares, account.CashBalance, account.Broker);
         }
 
+
+        //IT: what does method mean?
         private Share InitialOfferSearch(IEnumerable<Share> inputList, string securityId, int amount, decimal price,
             out ResultCode resultCode)
         {
             resultCode = ResultCode.SecurityNotFound;
             Share result = null;
+
+            //IT: can have the same sec in inputList?
             foreach (Share share in inputList)
             {
                 if (share.SecurityId == securityId)
@@ -166,6 +176,7 @@ namespace Epam.NetMentoring.StockExchange
                     {
                         if (share.Price <= price)
                         {
+                            //IT: isn't that better to break the loop here ?
                             result = share;
                         }
                         else
@@ -187,6 +198,7 @@ namespace Epam.NetMentoring.StockExchange
             return result;
         }
 
+        //IT: can it be generalized. It's pretty the same with the prev. method
         private SellRequest SellRequestsSearch(IEnumerable<SellRequest> inputList, string securityId, int amount, decimal price,
      out ResultCode resultCode)
         {
@@ -221,6 +233,7 @@ namespace Epam.NetMentoring.StockExchange
             return result;
         }
 
+        //IT: the method is not used at all
         private Share GetNewShare(List<ExchangeInternalAccounts> internalAccounts,IBroker broker, string securityId, int amount,decimal price, bool increaseCount)
         {
             Share oldShare=null;
