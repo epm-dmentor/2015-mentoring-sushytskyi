@@ -2,9 +2,9 @@
 {
   public class DealInfo
     {
-        public SellRecord Deal;
+        public SellRequest Deal;
 
-        public DealInfo(SellRecord deal)
+        public DealInfo(SellRequest deal)
         {
             // TODO: Complete member initialization
             Deal = deal;
