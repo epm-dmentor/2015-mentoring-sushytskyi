@@ -1,28 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Epam.NetMentoring.StockExchange
+﻿namespace Epam.NetMentoring.StockExchange
 {
-   public class Share
+    public class Share
     {
-       public string SecurityId { get; private set; }
-       public int Ammount { get; private set; }
-       public decimal Price { get; private set; }
+        public string SecurityId { get; private set; }
+        public int Ammount { get; private set; }
+        public decimal Price { get; private set; }
 
-       //IT: do you need it?
-       public Share()
-       {
-           
-       }
+        //IT: do you need it?
+        //IS: removed
 
-       public Share(string securityId, int ammount, decimal price)
-       {
-           // TODO: Complete member initialization
-           this.SecurityId = securityId;
-           this.Ammount = ammount;
-           this.Price = price;
-       }
+        public Share(string securityId, int ammount, decimal price)
+        {
+            this.SecurityId = securityId;
+            this.Ammount = ammount;
+            this.Price = price;
+        }
     }
 }

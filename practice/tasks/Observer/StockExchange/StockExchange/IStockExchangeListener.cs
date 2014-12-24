@@ -3,6 +3,6 @@
     public interface IStockExchangeListener
     {
         void OnSold(DealInfo info);
-        void OnRequestSelling(SellRequest info);
+        void OnRequestSelling(DealInfo info);
     }
 }

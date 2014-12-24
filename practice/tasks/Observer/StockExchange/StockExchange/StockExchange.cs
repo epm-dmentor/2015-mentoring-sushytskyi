@@ -6,99 +6,167 @@ namespace Epam.NetMentoring.StockExchange
 {
     public class StockExchange : IStockExchange
     {
-
         //IT: readonly?
-        private List<Share> _initialOffers = new List<Share>();
-        private List<SellRequest> _sellRequests = new List<SellRequest>();
-        private List<ExchangeInternalAccounts> _internalAccounts = new List<ExchangeInternalAccounts>();
+        //IS:Corrected
+        private readonly List<Share> _initialOffers = new List<Share>();
+        private readonly List<DealRequest> _sellRequests = new List<DealRequest>();
+        private readonly List<ExchangeInternalAccounts> _internalAccounts = new List<ExchangeInternalAccounts>();
 
         public event SoldEventHandler Sold;
         public event SellingRequestedEventHandler SellingRequested;
+
+        //process buy trade matching input with listed sell requests
+        private bool ProcessBuyAsSellBuyMatch(IBroker broker, string securityId, int ammount, decimal price,
+            out ResultCode resultCode, out IBroker seller)
+        {
+
+            //search for sell request matching criteria
+            var sellRequest = GetMatchedSellRequestFromInputList(_sellRequests, securityId, ammount, price, out resultCode);
+
+            //nothing found
+            if (sellRequest == null)
+            {
+                seller = null;
+                return false;
+            }
+
+            //brokers cash balance less than selling position
+            if (_internalAccounts.Find(s => s.Broker == broker).CashBalance < ammount * price)
+            {
+                resultCode = ResultCode.NotEnoughMoney;
+                seller = null;
+                return false;
+            }
+
+            //get share from broker account if exists to update
+            Share share =
+                _internalAccounts.Find(s => s.Broker == broker)
+                    .Shares.FirstOrDefault(s => s.SecurityId == securityId);
+
+            //is share exists create new share with icreased position and assgin it to broker account
+            if (share != null)
+            {
+                var newShare = GetNewShare(share, securityId, ammount, price, true);
+                _internalAccounts.Find(s => s.Broker == broker).Shares.Remove(share);
+                _internalAccounts.Find(s => s.Broker == broker).Shares.Add(newShare);
+            }
+            //if not exists create e share and assign it pn account
+            else
+            {
+                var newShare = GetNewShare(null, securityId, ammount, price, true);
+                if (newShare != null)
+                    _internalAccounts.Find(s => s.Broker == broker).Shares.Add(newShare);
+            }
+            //finally updated broker balance deacreasing cash position
+            _internalAccounts.Find(s => s.Broker == broker).CashBalance -= ammount * price;
+
+            // Updated seller cash balance and share position            
+            seller = sellRequest.Seller;
+
+            //get seller share  
+            Share sellerShare = _internalAccounts.Find(s => s.Broker == sellRequest.Seller)
+                    .Shares.FirstOrDefault(s => s.SecurityId == sellRequest.SecurityId);
+            //Remove share from seller account
+            _internalAccounts.Find(s => s.Broker == sellRequest.Seller)
+                .Shares.Remove(sellerShare);
+
+            //create new share with deacreased position if share postion 0, null returned
+            var newSellerShare = GetNewShare(sellerShare, securityId, ammount, price, false);
+
+            //if share postion greater than 0 assign new share
+            if (newSellerShare != null)
+                _internalAccounts.Find(s => s.Broker == sellRequest.Seller)
+                      .Shares.Add(newSellerShare);
+
+            //increase seller cash balance
+            _internalAccounts.Find(s => s.Broker == sellRequest.Seller)
+                .CashBalance += ammount * price;
+
+            //remove sell request
+            _sellRequests.Remove(sellRequest);
+
+            resultCode = ResultCode.Ok;
+            return true;
+        }
+        //proccess by trade matching input with Initial Offer list
+        private bool ProcessBuyAsInitialOfferBuy(IBroker broker, string securityId, int ammount, decimal price, out ResultCode resultCode)
+        {
+            //search for share matching critria in initioal offer list
+            var initialOfferShare = GetMatchedShareFromInputList(_initialOffers, securityId, ammount, price, out resultCode);
+
+            //share not found
+            if (initialOfferShare == null)
+            {
+                return false;
+            }
+            //buyer cash balance less then requested deal
+            if (_internalAccounts.Find(s => s.Broker == broker).CashBalance <
+                ammount * price)
+            {
+                resultCode = ResultCode.NotEnoughMoney;
+                return false;
+            }
+
+            //get broker share
+            Share share =
+                _internalAccounts.Find(s => s.Broker == broker)
+                    .Shares.FirstOrDefault(s => s.SecurityId == securityId);
+
+            //if exists increase current position
+            if (share != null)
+            {
+                var newShare = GetNewShare(share, securityId, ammount, price, true);
+                _internalAccounts.Find(s => s.Broker == broker).Shares.Remove(share);
+                if (newShare != null)
+                    _internalAccounts.Find(s => s.Broker == broker).Shares.Add(newShare);
+            }
+            //if not exists create new and assign to account 
+            else
+            {
+                var newShare = GetNewShare(null, securityId, ammount, price, true);
+                if (newShare != null)
+                    _internalAccounts.Find(s => s.Broker == broker).Shares.Add(newShare);
+
+            }
+
+            //Update initial offer postion 
+            //Get new share with decreased postion from initial offer list
+            var newInitialOfferShare = GetNewShare(initialOfferShare, securityId, ammount, initialOfferShare.Price, false);
+
+            //remove old share
+            _initialOffers.Remove(initialOfferShare);
+            //assign new one
+            if (newInitialOfferShare != null)
+                _initialOffers.Add(newInitialOfferShare);
+
+            //deacrease buyer cash balance
+            _internalAccounts.Find(s => s.Broker == broker).CashBalance -= ammount * price;
+
+            resultCode = ResultCode.Ok;
+            return true;
+        }
 
 
         //IT: make it readable and understandable.
         //IT: advise you can split it to few method if that's possible
         public ResultCode Buy(IBroker broker, string securityId, int ammount, decimal price)
         {
-            var sellFound = false;
             ResultCode resultCode;
 
-            var initialOfferShare = InitialOfferSearch(_initialOffers, securityId, ammount, price, out resultCode);
-
-            if (initialOfferShare != null)
+            //try to process by using initial offer first if false return result code
+            if (ProcessBuyAsInitialOfferBuy(broker, securityId, ammount, price, out resultCode))
             {
-                if (_internalAccounts.Find(s => s.Broker == broker).CashBalance <
-                    initialOfferShare.Ammount * initialOfferShare.Price)
-                {
-                    resultCode = ResultCode.NotEnoughMoney;
-                }
-                else
-                {
-
-                    Share share =
-                        _internalAccounts.Find(s => s.Broker == broker)
-                            .Shares.FirstOrDefault(s => s.SecurityId == securityId);
-
-                    if (share != null)
-                    {
-                        var newShare = new Share(share.SecurityId, share.Ammount + ammount, price);
-                        ((List<Share>)_internalAccounts.Find(s => s.Broker == broker).Shares).Remove(share);
-                        ((List<Share>)_internalAccounts.Find(s => s.Broker == broker).Shares).Add(newShare);
-                        _initialOffers[_initialOffers.FindIndex(s => s == initialOfferShare)] = new Share(securityId, initialOfferShare.Ammount - ammount, initialOfferShare.Price);
-                        sellFound = true;
-                    }
-                    else
-                    {
-                        var newShare = new Share(securityId, ammount, price);
-                        ((List<Share>)_internalAccounts.Find(s => s.Broker == broker).Shares).Add(newShare);
-                        _initialOffers[_initialOffers.FindIndex(s => s == initialOfferShare)] = new Share(securityId, initialOfferShare.Ammount - ammount, initialOfferShare.Price);
-                        sellFound = true;
-
-                    }
-                    _internalAccounts.Find(s => s.Broker == broker).CashBalance -= ammount*price;
-                }
+                if (Sold != null)
+                    Sold(new DealInfo(securityId, price, ammount, broker));
+                return resultCode;
             }
-
-            if (!sellFound)
+            //try to process trade based on plased sell requets
+            IBroker seller;
+            if (ProcessBuyAsSellBuyMatch(broker, securityId, ammount, price, out resultCode, out seller))
             {
-                var sellRequest = SellRequestsSearch(_sellRequests, securityId, ammount, price, out resultCode);
-
-                if (sellRequest == null)
-                {
-                    return resultCode;
-                }
-
-                if (_internalAccounts.Find(s => s.Broker == broker).CashBalance <
-                    sellRequest.Amount * sellRequest.Price)
-                {
-                    resultCode = ResultCode.NotEnoughMoney;
-                    return resultCode;
-                }
-
-                Share share =
-                    _internalAccounts.Find(s => s.Broker == broker)
-                        .Shares.FirstOrDefault(s => s.SecurityId == securityId);
-
-                if (share != null)
-                {
-                    var newShare = new Share(share.SecurityId, share.Ammount + ammount, price);
-                    ((List<Share>)_internalAccounts.Find(s => s.Broker == broker).Shares).Remove(share);
-                    ((List<Share>)_internalAccounts.Find(s => s.Broker == broker).Shares).Add(newShare);
-                    
-
-                }
-                else
-                {
-                    var newShare = new Share(securityId, ammount, price);
-                    ((List<Share>)_internalAccounts.Find(s => s.Broker == broker).Shares).Add(newShare);
-                }
-                _internalAccounts.Find(s => s.Broker == broker).CashBalance -= ammount *price;
-                var sellerAccount = _internalAccounts.Find(s => s.Broker == sellRequest.Seller);
-            //   sellerAccount.CashBalance+=ammount *price;
-            //    GetNewShare()
-                //sellerAccount.Shares.FirstOrDefault(s=>s.SecurityId==securityId).Ammount+=ammount *price;
-                
-                resultCode = ResultCode.Ok;
+                if (Sold != null)
+                    Sold(new DealInfo(securityId, price, ammount, broker, seller));
+                return resultCode;
 
             }
             return resultCode;
@@ -106,15 +174,19 @@ namespace Epam.NetMentoring.StockExchange
 
         public Guid RequestSell(IBroker broker, string securityId, int ammount, decimal price)
         {
-            //check if broker has shares to sell
+            //check if broker has active account.
             var brokerAccount = _internalAccounts.Find(s => s.Broker == broker);
-            if (brokerAccount!= null)
+            if (brokerAccount != null)
             {
+                //check if broker has share to sell 
                 var share = brokerAccount.Shares.FirstOrDefault(s => s.SecurityId == securityId);
                 if (share != null && share.Ammount >= ammount)
                 {
-                    var request = new SellRequest(broker, securityId, ammount, price);
+                    //generate request add it list
+                    var request = new DealRequest(broker, securityId, ammount, price, DealType.Sell);
                     _sellRequests.Add(request);
+                    if (SellingRequested != null)
+                        SellingRequested(new DealInfo(broker, securityId, price, ammount));
                     return request.Id;
                 }
             }
@@ -124,6 +196,8 @@ namespace Epam.NetMentoring.StockExchange
         public bool CancelRequest(Guid requestId)
         {
             var request = _sellRequests.FirstOrDefault(s => s.Id == requestId);
+
+            //check if requst is still there
             if (request != null)
             {
                 _sellRequests.Remove(request);
@@ -132,6 +206,7 @@ namespace Epam.NetMentoring.StockExchange
             return false;
         }
 
+        //IS: we might need to delete IStockExchange as return type as we set link between broker and account in broker method call 
         public IStockExchange Register(IBroker broker)
         {
             _internalAccounts.Add(new ExchangeInternalAccounts(new List<Share>(), 100, broker));
@@ -142,30 +217,42 @@ namespace Epam.NetMentoring.StockExchange
         public void Bid(Share share)
         {
             if (_initialOffers.Contains(share))
-                throw new Exception();
+                //we need to ovverride share equlity
+                throw new Exception("Share already listed");
             _initialOffers.Add(share);
         }
 
         public IEnumerable<Share> GetAvailableShares()
         {
             //IT: IReadOnlyList<Share>
-            return new List<Share>(_initialOffers);
+            //IS:corrected
+            return new List<Share>(_initialOffers).AsReadOnly();
         }
 
         public BrokerAccount GetAccount(IBroker broker)
         {
             var account = _internalAccounts.Find(s => s.Broker == broker);
             //IT: possible access breach - readonly list!
-            return new BrokerAccount(account.Shares, account.CashBalance, account.Broker);
+            //IS:BrokerAccount class corrected
+            return new BrokerAccount(account.Shares, account.CashBalance);
         }
 
 
         //IT: what does method mean?
-        private Share InitialOfferSearch(IEnumerable<Share> inputList, string securityId, int amount, decimal price,
+        /// <summary>
+        /// get share from input list of shares which match SecurityId,Price and existing ammount greater than requested. if nothing found 
+        /// share evaluated to null you need to check resultCode with actual error code.  
+        /// </summary>
+        /// <param name="inputList"></param>
+        /// <param name="securityId"></param>
+        /// <param name="amount"></param>
+        /// <param name="price"></param>
+        /// <param name="resultCode"></param>
+        /// <returns></returns>
+        private Share GetMatchedShareFromInputList(IEnumerable<Share> inputList, string securityId, int amount, decimal price,
             out ResultCode resultCode)
         {
             resultCode = ResultCode.SecurityNotFound;
-            Share result = null;
 
             //IT: can have the same sec in inputList?
             foreach (Share share in inputList)
@@ -174,15 +261,13 @@ namespace Epam.NetMentoring.StockExchange
                 {
                     if (share.Ammount >= amount)
                     {
-                        if (share.Price <= price)
+                        if (share.Price == price)
                         {
                             //IT: isn't that better to break the loop here ?
-                            result = share;
+                            resultCode = ResultCode.Ok;
+                            return share;
                         }
-                        else
-                        {
-                            resultCode = ResultCode.WrongPrice;
-                        }
+                        resultCode = ResultCode.WrongPrice;
                     }
                     else
                     {
@@ -195,29 +280,39 @@ namespace Epam.NetMentoring.StockExchange
                 }
 
             }
-            return result;
+            return null;
         }
 
         //IT: can it be generalized. It's pretty the same with the prev. method
-        private SellRequest SellRequestsSearch(IEnumerable<SellRequest> inputList, string securityId, int amount, decimal price,
+
+        /// <summary>
+        /// get Deal request from input list of Deal requests which match SecurityId,Price and ammount. if nothing found 
+        /// share evaluated to null and you need to check resultCode with actual error code.  
+        /// </summary>
+        /// <param name="inputList"></param>
+        /// <param name="securityId"></param>
+        /// <param name="amount"></param>
+        /// <param name="price"></param>
+        /// <param name="resultCode"></param>
+        /// <returns></returns>
+
+        private DealRequest GetMatchedSellRequestFromInputList(IEnumerable<DealRequest> inputList, string securityId, int amount, decimal price,
      out ResultCode resultCode)
         {
             resultCode = ResultCode.SecurityNotFound;
-            SellRequest result = null;
-            foreach (SellRequest sellRequest in inputList)
+
+            foreach (DealRequest sellRequest in inputList)
             {
                 if (sellRequest.SecurityId == securityId)
                 {
-                    if (sellRequest.Amount >= amount)
+                    if (sellRequest.Amount == amount)
                     {
-                        if (sellRequest.Price <= price)
+                        if (sellRequest.Price == price)
                         {
-                            result = sellRequest;
+                            resultCode = ResultCode.Ok;
+                            return sellRequest;
                         }
-                        else
-                        {
-                            resultCode = ResultCode.WrongPrice;
-                        }
+                        resultCode = ResultCode.WrongPrice;
                     }
                     else
                     {
@@ -230,47 +325,46 @@ namespace Epam.NetMentoring.StockExchange
                 }
 
             }
-            return result;
+            return null;
         }
 
         //IT: the method is not used at all
-        private Share GetNewShare(List<ExchangeInternalAccounts> internalAccounts,IBroker broker, string securityId, int amount,decimal price, bool increaseCount)
+        /// <summary>
+        /// Returns new share instance based on old share if provided
+        /// </summary>
+        /// <param name="oldShare">if null new share will be created with ammount as position</param>
+        /// <param name="securityId"></param>
+        /// <param name="amount"></param>
+        /// <param name="price"></param>
+        /// <param name="increase"> true if postion needs to be increased false otherwise</param>
+        /// <returns></returns>
+        private Share GetNewShare(Share oldShare, string securityId, int amount, decimal price, bool increase)
         {
-            Share oldShare=null;
             Share newShare = null;
 
-            foreach (ExchangeInternalAccounts account in internalAccounts)
+            if (oldShare != null && increase)
             {
-                if (account.Broker == broker)
-                {
-                    foreach (var share in account.Shares)
-                    {
-                        if (share.SecurityId == securityId)
-                        {
-                            oldShare = share;
-                        }
-                    }
-                }
+                newShare = new Share(securityId, amount + oldShare.Ammount, price);
             }
-            if (oldShare != null&&increaseCount)
+            if (oldShare != null && !increase)
             {
-                newShare=new Share(securityId,amount+oldShare.Ammount,price);
+                if ((oldShare.Ammount - amount) < 0)
+                    throw new Exception("new share ammount less than 0");
 
+                if ((oldShare.Ammount - amount) == 0)
+                    return null;
+
+                newShare = new Share(securityId, oldShare.Ammount - amount, price);
             }
-            if (oldShare != null && !increaseCount)
+            if (oldShare == null && increase)
             {
-                newShare = new Share(securityId, oldShare.Ammount-amount, price);
+                newShare = new Share(securityId, amount, price);
             }
-            if (oldShare == null && increaseCount)
+            if (oldShare == null && !increase)
             {
-                newShare = new Share(securityId, amount, price);                
-            }
-            if (oldShare == null && !increaseCount)
-            {
-               throw new Exception("No shares on broker's ccount mathing condition which count can be decreased");
+                throw new Exception("Cannot decrease new share account as old share does not exists");
             }
             return newShare;
         }
-      
     }
 }

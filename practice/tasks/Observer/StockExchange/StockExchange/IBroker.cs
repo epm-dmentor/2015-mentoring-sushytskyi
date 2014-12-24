@@ -11,7 +11,8 @@ namespace Epam.NetMentoring.StockExchange
         ResultCode Buy(string securityId, int price, int amount);
         void RequestSell(string securityId, int price, int amount);
 
-        bool CancelRequest(Guid requestId);
+        bool CancelRequest();
+
         void SettleStockExchange(IStockExchange exchange);
     }
 }

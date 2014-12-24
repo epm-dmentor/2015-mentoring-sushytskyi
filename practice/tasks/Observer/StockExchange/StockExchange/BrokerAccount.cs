@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿using System.Collections.Generic;
 //IT: unused namspaces?!
 
 namespace Epam.NetMentoring.StockExchange
@@ -11,9 +6,8 @@ namespace Epam.NetMentoring.StockExchange
     public class BrokerAccount
     {
         //Readonly?
-        private decimal _cashBalance;
-        private IEnumerable<Share> _shares;
-        private IBroker _broker;
+        private readonly decimal _cashBalance;
+        private readonly IEnumerable<Share> _shares;
 
         public decimal CashBalance
         {
@@ -31,16 +25,9 @@ namespace Epam.NetMentoring.StockExchange
                 return _shares;
             }
         }
-        public IBroker Broker
-        {
-            get
-            {
-                return _broker;
-            }
-        }
-        
+
         //IT: you have broker in the param list, but do not use it
-        public BrokerAccount(IEnumerable<Share> shares, decimal cashBalance,IBroker broker)
+        public BrokerAccount(IEnumerable<Share> shares, decimal cashBalance)
         {
             this._shares = shares;
             this._cashBalance = cashBalance;

@@ -3,64 +3,72 @@
 namespace Epam.NetMentoring.StockExchange
 {
     //IT: Ctrl + E + D for each file!!!!!
-   public class Broker:IBroker
-   {
+    public class Broker : IBroker
+    {
         public string Name { get; private set; }
-        public BrokerAccount Account {
+        public BrokerAccount Account
+        {
             get
             {
-                return StockExchange.GetAccount(this);
+                return _stockExchange.GetAccount(this);
             }
             //IT: What do you mean by that?
-            private set{} }
-
-       //IT: public field?!
-        public IStockExchange StockExchange;
-
-
-       //IT: public field with get and set? What is the reason?
-       public Guid SellrequestId { get; set; }
-
-       public Broker(IStockExchange exchange,string brokerName)
-        {
-            this.Name = brokerName;
-
-           //IT: it's better to use either constructor injection/property/metod, but not alltogether
-           this.StockExchange = exchange;
+            //  private set { }
         }
 
-       public void OnSold(DealInfo info)
-       {
-           throw new NotImplementedException();
-       }
+        //IT: public field?!
+        private IStockExchange _stockExchange;
 
-       public void OnRequestSelling(SellRequest info)
-       {
-           throw new NotImplementedException();
-       }
 
-       
-       public ResultCode Buy(string securityId, int price, int amount)
-       {
-           return StockExchange.Buy(this, securityId, amount, price);
-       }
+        //IT: public field with get and set? What is the reason?
+        //  public Guid SellrequestId { get; set; }
+        private Guid _sellRequestId;
 
-       public void RequestSell(string securityId, int price, int amount)
-       {
-          SellrequestId= StockExchange.RequestSell(this, securityId, amount, price);
-       }
+        public Broker(string brokerName)
+        {
+            this.Name = brokerName;
+            //IT: it's better to use either constructor injection/property/metod, but not alltogether
+            // this.StockExchange = exchange;
+        }
 
-       public bool CancelRequest(Guid requestId)
-       {
-           //IT: What happnes if I run that method twice?
-           return StockExchange.CancelRequest(requestId);
-       }
+        public void OnSold(DealInfo info)
+        {
+            throw new NotImplementedException();
+        }
 
-       public void SettleStockExchange(IStockExchange exchange)
-       {
-           //IT: it's better to use either constructor injection/property/metod, but not alltogether
-           //if the method is declared in the interface it's better to use the method to inject stock exchange
-           StockExchange = exchange;
-       }
+        public void OnRequestSelling(DealInfo info)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        public ResultCode Buy(string securityId, int price, int amount)
+        {
+            return _stockExchange.Buy(this, securityId, amount, price);
+        }
+
+        public void RequestSell(string securityId, int price, int amount)
+        {
+            _sellRequestId = _stockExchange.RequestSell(this, securityId, amount, price);
+        }
+        //
+        public bool CancelRequest()
+        {
+            //IS: As per requirements only one buy request can be raised at the moment hence request id can be stored internaly and canceled upon request
+            return _stockExchange.CancelRequest(_sellRequestId);
+        }
+
+
+        public void SettleStockExchange(IStockExchange exchange)
+        {
+            //IT: it's better to use either constructor injection/property/metod, but not alltogether
+            //if the method is declared in the interface it's better to use the method to inject stock exchange
+            _stockExchange = exchange;
+        }
+
+        public override string ToString()
+        {
+            return this.Name;
+        }
     }
 }
