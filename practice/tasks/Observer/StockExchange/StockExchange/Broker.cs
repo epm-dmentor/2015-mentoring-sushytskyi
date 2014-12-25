@@ -33,6 +33,7 @@ namespace Epam.NetMentoring.StockExchange
 
         public void OnSold(DealInfo info)
         {
+            //IT2: React somehow to the event
             throw new NotImplementedException();
         }
 
@@ -55,6 +56,7 @@ namespace Epam.NetMentoring.StockExchange
         public bool CancelRequest()
         {
             //IS: As per requirements only one buy request can be raised at the moment hence request id can be stored internaly and canceled upon request
+            //IT2: in that case you MUST garantee to allow only one request.
             return _stockExchange.CancelRequest(_sellRequestId);
         }
 

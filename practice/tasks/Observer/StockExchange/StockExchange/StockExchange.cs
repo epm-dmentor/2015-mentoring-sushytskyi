@@ -4,10 +4,13 @@ using System.Linq;
 
 namespace Epam.NetMentoring.StockExchange
 {
+    //IT2: code + comments - OMG. simplify it, split to separate logical method. Give reasonable names to the methods
+    // correct code for this class only after consultation with me
     public class StockExchange : IStockExchange
     {
         //IT: readonly?
         //IS:Corrected
+        //IT2: it's better to use interfaces instead of concreat types if that's possibles
         private readonly List<Share> _initialOffers = new List<Share>();
         private readonly List<DealRequest> _sellRequests = new List<DealRequest>();
         private readonly List<ExchangeInternalAccounts> _internalAccounts = new List<ExchangeInternalAccounts>();

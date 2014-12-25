@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 
 namespace Epam.NetMentoring.StockExchange
 {
+    //IT2: if i hadn't added comment to this fine about unused namespaces, it does not mean that you should not remove it
+    //IT2: I though the one comment for the project is enought to remove unused namspaces from the all files
     class Program
     {
         static void Main(string[] args)
