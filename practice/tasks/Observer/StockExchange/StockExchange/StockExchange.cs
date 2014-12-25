@@ -6,7 +6,7 @@ namespace Epam.NetMentoring.StockExchange
 {
     //IT2: code + comments - OMG. simplify it, split to separate logical method. Give reasonable names to the methods
     // correct code for this class only after consultation with me
-    public class StockExchange : IStockExchange
+    public partial class StockExchange : IStockExchange
     {
         //IT: readonly?
         //IS:Corrected

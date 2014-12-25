@@ -16,9 +16,6 @@ namespace Epam.NetMentoring.StockExchange
         {
             get
             {
-                //if no broker create dummy one with name "no broker" 
-                if (_seller == null)
-                    return new Broker("No broker");
                 return _seller;
             }
             private set
@@ -31,10 +28,8 @@ namespace Epam.NetMentoring.StockExchange
         {
             get
             {
-                //if no broker create dummy one with name "no broker" 
                 //IT2: it's not good approach to have dummy broker
-                if (_buyer == null)
-                    return new Broker("No broker");
+                //IS2: dummy broker deleted null broker should be handled explicitly further 
                 return _buyer;
             }
             private set

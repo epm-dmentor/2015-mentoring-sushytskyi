@@ -1,23 +1,21 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Epam.NetMentoring.StockExchange
 {
     //IT2: if i hadn't added comment to this fine about unused namespaces, it does not mean that you should not remove it
     //IT2: I though the one comment for the project is enought to remove unused namspaces from the all files
+    //IS2: Sorry, i realy missed this file 
     class Program
     {
         static void Main(string[] args)
         {
 
             IStockExchange stockExchange=new StockExchange();            
-            Listener listener = new Listener();
+            ExchangeLogger loger = new ExchangeLogger();
 
-            stockExchange.Sold += listener.OnSold;
-            stockExchange.SellingRequested += listener.OnRequestSelling;        
+            stockExchange.Sold += loger.OnSold;
+            stockExchange.SellingRequested += loger.OnRequestSelling;        
 
             IBroker broker1 = new Broker("Broker1");
             IBroker broker2 = new Broker("Broker2");

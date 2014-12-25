@@ -50,6 +50,11 @@ namespace Epam.NetMentoring.StockExchange
 
         public void RequestSell(string securityId, int price, int amount)
         {
+            if (_sellRequestId != Guid.Empty)
+            {
+                Console.WriteLine("You have already requested a sell, please cancel it first");
+                return;
+            }
             _sellRequestId = _stockExchange.RequestSell(this, securityId, amount, price);
         }
         //
@@ -57,7 +62,11 @@ namespace Epam.NetMentoring.StockExchange
         {
             //IS: As per requirements only one buy request can be raised at the moment hence request id can be stored internaly and canceled upon request
             //IT2: in that case you MUST garantee to allow only one request.
-            return _stockExchange.CancelRequest(_sellRequestId);
+            //IS2: Had to correct RequestSell method of broker so that if sell request raised no new requests can be created until old canceled 
+            var resultCode = _stockExchange.CancelRequest(_sellRequestId);
+            _sellRequestId = Guid.Empty;
+
+            return resultCode;
         }
 
 
