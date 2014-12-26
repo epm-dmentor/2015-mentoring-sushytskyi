@@ -4,7 +4,7 @@ namespace Epam.NetMentoring.StockExchange
 {
     //IT2: It might be names as Listener, but it's better to use more evidend name
     // do not sea the reason to do it internal
-    class ExchangeLogger : IStockExchangeListener
+   public class ExchangeLogger : IStockExchangeListener
     {
         public void OnSold(DealInfo info)
         {
