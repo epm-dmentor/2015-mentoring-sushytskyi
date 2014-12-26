@@ -1,4 +1,6 @@
 ﻿using System;
+
+//IT: ?????????
 using System.Runtime.ConstrainedExecution;
 
 namespace Epam.NetMentoring.Observer.Store
@@ -24,6 +26,8 @@ namespace Epam.NetMentoring.Observer.Store
             customer1.UnRegisterStore();
             store.AddProduct("Product1", 1, 5);
 
+
+            //IT: as usual everyone uses ReadKey(), but ReadLine is also OK.
             Console.ReadLine();
         }
     }

@@ -1,5 +1,6 @@
 ﻿namespace Epam.NetMentoring.Observer.Store
 {
+    //IT: you have it in the interface
     class ProductInfo
     {
         public string Name { get; private set; }

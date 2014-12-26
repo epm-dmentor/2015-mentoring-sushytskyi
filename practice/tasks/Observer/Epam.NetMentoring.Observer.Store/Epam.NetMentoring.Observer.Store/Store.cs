@@ -5,6 +5,19 @@ using Epam.NetMentoring.Observer.Store.Interfaces;
 
 namespace Epam.NetMentoring.Observer.Store
 {
+
+    //IT:
+    //есть концептуальные ошибки с GetNewStoreItem
+    //давай сделаем так, я изменю слегка задание, чтобы ты пришел к правильному решинею
+    //есть магазин, товары могут заканчиваться. Т.е. магазин трекает товары
+    //но есть МЕГА поставщик, он контролирует стор и пополняет когда считает что магазину нужно пополнение существующих товаров (придумай какуюто логику)
+    //для упрощения: магазин всегда принимает товар. Поставка товара бестплатна, так что денги тулить сюда не нужно
+
+
+
+
+
+    //IT: do you really want it to be internal?
     class Store : IStore
     {
         private readonly IList<ICustomer> _customerList = new List<ICustomer>();
@@ -93,6 +106,7 @@ namespace Epam.NetMentoring.Observer.Store
         {
             foreach (ICustomer customer in _customerList)
             {
+                //IT: let's imagine we have 2 000 000, for the only one event this code will create 2 000 000 objects! 
                 customer.OnShopItemAdded(new ProductInfo(newItem.Name, newItem.Amount, newItem.Price), oldAmount);
             }
         }
