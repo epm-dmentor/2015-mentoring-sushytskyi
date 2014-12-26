@@ -1,5 +1,4 @@
-﻿using System.Dynamic;
-
+﻿
 namespace Epam.NetMentoring.StockExchange
 {
     //IT: the same effect as you turn on camare and make a record in the mirror (a mirror in the mirror in the mirror...)
@@ -38,32 +37,21 @@ namespace Epam.NetMentoring.StockExchange
             }
         }
 
-        public DealInfo(string securityId, decimal price, int ammount, IBroker buyer)
-        {
-            // TODO: Complete member initialization
-            this.SecurityId = securityId;
-            this.Price = price;
-            this.Ammount = ammount;
-            this.Buyer = buyer;
-        }
 
-        public DealInfo(string securityId, decimal price, int ammount, IBroker buyer, IBroker seller)
+        public DealInfo(
+            string securityId, 
+            decimal price,
+            int ammount, 
+            IBroker buyer, 
+            IBroker seller = null)
         {
-            // TODO: Complete member initialization
-            this.SecurityId = securityId;
-            this.Price = price;
-            this.Ammount = ammount;
-            this.Buyer = buyer;
-            this.Seller = seller;
+            SecurityId = securityId;
+            Price = price;
+            Ammount = ammount;
+            Buyer = buyer;
+            Seller = seller;
         }
-        public DealInfo(IBroker seller, string securityId, decimal price, int ammount)
-        {
-            // TODO: Complete member initialization
-            this.SecurityId = securityId;
-            this.Price = price;
-            this.Ammount = ammount;
-            this.Seller = seller;
-        }
+       
 
     }
 }

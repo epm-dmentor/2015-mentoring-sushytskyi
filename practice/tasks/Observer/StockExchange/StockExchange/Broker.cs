@@ -48,6 +48,7 @@ namespace Epam.NetMentoring.StockExchange
             return _stockExchange.Buy(this, securityId, amount, price);
         }
 
+        //IT3: it's better to use bool
         public void RequestSell(string securityId, int price, int amount)
         {
             if (_sellRequestId != Guid.Empty)
@@ -62,7 +63,7 @@ namespace Epam.NetMentoring.StockExchange
         {
             //IS: As per requirements only one buy request can be raised at the moment hence request id can be stored internaly and canceled upon request
             //IT2: in that case you MUST garantee to allow only one request.
-            //IS2: Had to correct RequestSell method of broker so that if sell request raised no new requests can be created until old canceled 
+            //IS2: Correct in RequestSell
             var resultCode = _stockExchange.CancelRequest(_sellRequestId);
             _sellRequestId = Guid.Empty;
 
@@ -72,6 +73,9 @@ namespace Epam.NetMentoring.StockExchange
 
         public void SettleStockExchange(IStockExchange exchange)
         {
+            if (_stockExchange != null)
+                throw new ApplicationException("Already subscribed");
+
             //IT: it's better to use either constructor injection/property/metod, but not alltogether
             //if the method is declared in the interface it's better to use the method to inject stock exchange
             _stockExchange = exchange;

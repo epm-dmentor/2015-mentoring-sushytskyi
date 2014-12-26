@@ -1,5 +1,4 @@
-﻿using System;
-
+﻿
 namespace Epam.NetMentoring.StockExchange
 {
     public interface IBroker : IStockExchangeListener

@@ -4,10 +4,15 @@ using System.Linq;
 
 namespace Epam.NetMentoring.StockExchange
 {
+    //1. Разиваем методы на логические цепочки действий (монофункциональные)
+    //2. Дать нормальные адекватные названия методав, сгенеренным выше
+
     //IT2: code + comments - OMG. simplify it, split to separate logical method. Give reasonable names to the methods
     // correct code for this class only after consultation with me
     public partial class StockExchange : IStockExchange
     {
+        private const int DefaultCashAmount = 100;
+
         //IT: readonly?
         //IS:Corrected
         //IT2: it's better to use interfaces instead of concreat types if that's possibles
@@ -189,7 +194,7 @@ namespace Epam.NetMentoring.StockExchange
                     var request = new DealRequest(broker, securityId, ammount, price, DealType.Sell);
                     _sellRequests.Add(request);
                     if (SellingRequested != null)
-                        SellingRequested(new DealInfo(broker, securityId, price, ammount));
+                        SellingRequested(new DealInfo(securityId, price, ammount, null, broker));
                     return request.Id;
                 }
             }
@@ -200,7 +205,6 @@ namespace Epam.NetMentoring.StockExchange
         {
             var request = _sellRequests.FirstOrDefault(s => s.Id == requestId);
 
-            //check if requst is still there
             if (request != null)
             {
                 _sellRequests.Remove(request);
@@ -212,7 +216,7 @@ namespace Epam.NetMentoring.StockExchange
         //IS: we might need to delete IStockExchange as return type as we set link between broker and account in broker method call 
         public IStockExchange Register(IBroker broker)
         {
-            _internalAccounts.Add(new ExchangeInternalAccounts(new List<Share>(), 100, broker));
+            _internalAccounts.Add(new ExchangeInternalAccounts(new List<Share>(), DefaultCashAmount, broker));
             broker.SettleStockExchange(this);
             return this;
         }
@@ -233,10 +237,12 @@ namespace Epam.NetMentoring.StockExchange
         }
 
         public BrokerAccount GetAccount(IBroker broker)
-        {
+        {           
             var account = _internalAccounts.Find(s => s.Broker == broker);
             //IT: possible access breach - readonly list!
             //IS:BrokerAccount class corrected
+
+            //IT3: null reference exception
             return new BrokerAccount(account.Shares, account.CashBalance);
         }
 
@@ -252,12 +258,35 @@ namespace Epam.NetMentoring.StockExchange
         /// <param name="price"></param>
         /// <param name="resultCode"></param>
         /// <returns></returns>
+        /// 
+        /// 
+        //ShareMatchResult
+
+
+        //1. find share
+        //2. check constraints
+
+        private Share Find(IEnumerable<Share> shares, string securityId)
+        {
+            if (shares == null)
+                return null;
+
+            var resultShare = shares.FirstOrDefault(s => String.Equals(s.SecurityId, securityId));
+            
+            return resultShare;
+        }
+
+        private ResultCode CheckConstrains(string securityId, int amount, decimal price)
+        {}
+
         private Share GetMatchedShareFromInputList(IEnumerable<Share> inputList, string securityId, int amount, decimal price,
             out ResultCode resultCode)
         {
             resultCode = ResultCode.SecurityNotFound;
 
             //IT: can have the same sec in inputList?
+
+            //IT3: null reference
             foreach (Share share in inputList)
             {
                 if (share.SecurityId == securityId)
@@ -302,6 +331,7 @@ namespace Epam.NetMentoring.StockExchange
         private DealRequest GetMatchedSellRequestFromInputList(IEnumerable<DealRequest> inputList, string securityId, int amount, decimal price,
      out ResultCode resultCode)
         {
+            //IT3: the same mistake as for previous
             resultCode = ResultCode.SecurityNotFound;
 
             foreach (DealRequest sellRequest in inputList)

@@ -10,7 +10,7 @@ namespace Epam.NetMentoring.StockExchange
     }
 
     //IT: it can be generalized for our case: DealRequest
-    public class DealRequest
+    class DealRequest
     {
         public DealRequest(IBroker seller, string securityId, int ammount, decimal price, DealType dealType)
         {

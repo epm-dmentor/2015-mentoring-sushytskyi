@@ -29,8 +29,8 @@ namespace Epam.NetMentoring.StockExchange
         //IT: you have broker in the param list, but do not use it
         public BrokerAccount(IEnumerable<Share> shares, decimal cashBalance)
         {
-            this._shares = shares;
-            this._cashBalance = cashBalance;
+            _shares = shares;
+            _cashBalance = cashBalance;
         }
     }
 }

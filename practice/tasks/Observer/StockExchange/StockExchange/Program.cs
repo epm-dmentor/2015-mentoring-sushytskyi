@@ -12,7 +12,7 @@ namespace Epam.NetMentoring.StockExchange
         {
 
             IStockExchange stockExchange=new StockExchange();            
-            ExchangeLogger loger = new ExchangeLogger();
+            IStockExchangeListener loger = new ExchangeLogger();
 
             stockExchange.Sold += loger.OnSold;
             stockExchange.SellingRequested += loger.OnRequestSelling;        
