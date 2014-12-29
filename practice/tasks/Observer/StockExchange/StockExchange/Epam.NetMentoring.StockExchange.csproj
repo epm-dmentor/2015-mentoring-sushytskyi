@@ -43,7 +43,7 @@
   <ItemGroup>
     <Compile Include="Broker.cs" />
     <Compile Include="BrokerAccount.cs" />
-    <Compile Include="ExchangeInternalAccounts.cs" />
+    <Compile Include="ExchangeInternalAccount.cs" />
     <Compile Include="ExchangeLoger.cs" />
     <Compile Include="ResultCode.cs" />
     <Compile Include="Delegates.cs" />

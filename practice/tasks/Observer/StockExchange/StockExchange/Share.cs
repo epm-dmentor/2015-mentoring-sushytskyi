@@ -1,4 +1,5 @@
-﻿namespace Epam.NetMentoring.StockExchange
+﻿using System;
+namespace Epam.NetMentoring.StockExchange
 {
     public class Share
     {
@@ -14,6 +15,12 @@
             this.SecurityId = securityId;
             this.Ammount = ammount;
             this.Price = price;
+        }
+       public Share Update(int ammount, decimal price)
+        {
+            if ((this.Ammount += ammount) < 0)
+                throw new ApplicationException("Security position less than 0");
+            return new Share(SecurityId, this.Ammount += ammount, price);
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿
-namespace Epam.NetMentoring.StockExchange
+﻿namespace Epam.NetMentoring.StockExchange
 {
     public interface IBroker : IStockExchangeListener
     {
@@ -8,7 +7,7 @@ namespace Epam.NetMentoring.StockExchange
 
         //Ok, SecurityNotFound, WrongPrice, NotEnoughSec,NotEnoughMoney
         ResultCode Buy(string securityId, int price, int amount);
-        void RequestSell(string securityId, int price, int amount);
+        bool RequestSell(string securityId, int price, int amount);
 
         bool CancelRequest();
 

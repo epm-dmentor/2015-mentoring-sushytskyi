@@ -34,12 +34,15 @@ namespace Epam.NetMentoring.StockExchange
         public void OnSold(DealInfo info)
         {
             //IT2: React somehow to the event
-            throw new NotImplementedException();
+            Console.WriteLine("New Deal: Security {0} | Ammount {1} | Price {2}| ",
+                                info.SecurityId, info.Ammount, info.Price);
         }
 
         public void OnRequestSelling(DealInfo info)
         {
-            throw new NotImplementedException();
+            Console.WriteLine("New sell requested: Security {0} | Ammount {1} | Price {2}| ",
+                                info.SecurityId, info.Ammount, info.Price);
+
         }
 
 
@@ -49,14 +52,17 @@ namespace Epam.NetMentoring.StockExchange
         }
 
         //IT3: it's better to use bool
-        public void RequestSell(string securityId, int price, int amount)
+        public bool RequestSell(string securityId, int price, int amount)
         {
             if (_sellRequestId != Guid.Empty)
             {
                 Console.WriteLine("You have already requested a sell, please cancel it first");
-                return;
+                return false;
             }
             _sellRequestId = _stockExchange.RequestSell(this, securityId, amount, price);
+            if (_sellRequestId != Guid.Empty)
+                return true;
+            return false;
         }
         //
         public bool CancelRequest()

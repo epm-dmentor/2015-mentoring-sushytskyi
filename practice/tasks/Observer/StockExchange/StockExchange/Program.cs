@@ -11,11 +11,11 @@ namespace Epam.NetMentoring.StockExchange
         static void Main(string[] args)
         {
 
-            IStockExchange stockExchange=new StockExchange();            
+            IStockExchange stockExchange = new StockExchange();
             IStockExchangeListener loger = new ExchangeLogger();
 
             stockExchange.Sold += loger.OnSold;
-            stockExchange.SellingRequested += loger.OnRequestSelling;        
+            stockExchange.SellingRequested += loger.OnRequestSelling;
 
             IBroker broker1 = new Broker("Broker1");
             IBroker broker2 = new Broker("Broker2");
@@ -31,9 +31,7 @@ namespace Epam.NetMentoring.StockExchange
             broker1.RequestSell("mmm", 10, 10);
             broker2.Buy("mmm", 10, 10);
             broker1.RequestSell("ttt", 1, 1);
-//            broker2.Buy( "ttt", 1, 1);
 
-            //request selling
             Console.ReadLine();
         }
     }
