@@ -10,6 +10,6 @@
         //IT: the same, you can identify a product only by unique identifier
         Item Buy(string itemName, int amount);
         //IT: How can I get the list of all products?
-        void SuplyItem(Item item);
+        void SupplyItem(Item item);
     }
 }

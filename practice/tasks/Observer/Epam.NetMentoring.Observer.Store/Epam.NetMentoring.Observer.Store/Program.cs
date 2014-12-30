@@ -11,7 +11,7 @@ namespace Epam.NetMentoring.Observer.Store
             var store = new Store();
             var customer1 = new Customer("Customer1");
             var customer2 = new Customer("Customer2");
-            var supplier = new Suplyer("Suplier");
+            var supplier = new Supplier("Suplier");
             store.Subscribe(supplier);
             supplier.DeliveryStore = store;
 
@@ -19,10 +19,10 @@ namespace Epam.NetMentoring.Observer.Store
             store.Subscribe(customer2);
 
 
-            store.SuplyItem(new Item("Product1", 10, 5));
+            store.SupplyItem(new Item("Product1", 10, 5));
 
-            store.SuplyItem(new Item("Product2", 1, 3));
-            store.SuplyItem(new Item("Product2", 3, 3));
+            store.SupplyItem(new Item("Product2", 1, 3));
+            store.SupplyItem(new Item("Product2", 3, 3));
 
             customer1.Buy(store, "Product2", 2);
             customer1.UnSubscribe();

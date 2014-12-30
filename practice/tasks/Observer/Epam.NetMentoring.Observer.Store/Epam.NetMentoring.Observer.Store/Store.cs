@@ -42,7 +42,7 @@ namespace Epam.NetMentoring.Observer.Store
                 registredCustomer.UnSubscribe();
             }
         }
-        public void SuplyItem(Item item)
+        public void SupplyItem(Item item)
         {
             var existItem = FindItem(_storeItems, item.Name);
             Item newItem;
