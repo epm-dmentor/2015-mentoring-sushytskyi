@@ -1,19 +1,15 @@
 ﻿namespace Epam.NetMentoring.Observer.Store.Interfaces
 {
-    interface IStore
+    public interface IStore : IStorePublisher
     {
         //IT: IT's better to move registering for events in different interface to not break SOLID
         //IT: as you use it for notification it's clearer to use method with name subscribe
-        bool Register(ICustomer custore);
-        //IT: unsubscribe
-        void Unregister(ICustomer customer);
 
         //IT: for identification of products, its better to use EAN, ID
-        void AddProduct(string name, int amount, decimal price);
+        //    void AddProduct(string name, int amount, decimal price);
         //IT: the same, you can identify a product only by unique identifier
-        Item Buy(string itemName, int amount);  
-      
-
+        Item Buy(string itemName, int amount);
         //IT: How can I get the list of all products?
+        void SuplyItem(Item item);
     }
 }

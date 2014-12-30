@@ -1,7 +1,6 @@
 ﻿using System;
 
 //IT: ?????????
-using System.Runtime.ConstrainedExecution;
 
 namespace Epam.NetMentoring.Observer.Store
 {
@@ -12,19 +11,21 @@ namespace Epam.NetMentoring.Observer.Store
             var store = new Store();
             var customer1 = new Customer("Customer1");
             var customer2 = new Customer("Customer2");
+            var supplier = new Suplyer("Suplier");
+            store.Subscribe(supplier);
+            supplier.DeliveryStore = store;
 
-            store.Register(customer1);
-            store.Register(customer2);
+            store.Subscribe(customer1);
+            store.Subscribe(customer2);
 
-            store.AddProduct("Product1", 10, 5);
 
-            store.AddProduct("Product2", 1, 3);
-            store.AddProduct("Product2", 3, 3);
+            store.SuplyItem(new Item("Product1", 10, 5));
 
-            customer1.Buy("Product2", 2);
-            store.AddProduct("Product2", 1, 3);
-            customer1.UnRegisterStore();
-            store.AddProduct("Product1", 1, 5);
+            store.SuplyItem(new Item("Product2", 1, 3));
+            store.SuplyItem(new Item("Product2", 3, 3));
+
+            customer1.Buy(store, "Product2", 2);
+            customer1.UnSubscribe();
 
 
             //IT: as usual everyone uses ReadKey(), but ReadLine is also OK.

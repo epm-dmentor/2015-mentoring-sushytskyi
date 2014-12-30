@@ -5,7 +5,7 @@ namespace Epam.NetMentoring.Observer.Store
 {
     class Customer : ICustomer
     {
-        private IStore _store;
+        private IStorePublisher _storePublisher;
         public string Name { get; private set; }
 
         public Customer(string name)
@@ -13,21 +13,21 @@ namespace Epam.NetMentoring.Observer.Store
             Name = name;
         }
 
-        public void RegisterStore(IStore store)
+        public void Subscribe(IStorePublisher store)
         {
-            if (_store != null)
+            if (_storePublisher != null)
             {
                 throw new Exception("Store already registred, Unregister first");
             }
-                _store = store;
+            _storePublisher = store;
         }
 
-        public void UnRegisterStore()
+        public void UnSubscribe()
         {
-            if (_store != null)
+            if (_storePublisher != null)
             {
-                _store.Unregister(this);
-                _store = null;
+                _storePublisher.UnSubscribe(this);
+                _storePublisher = null;
             }
             else
             {
@@ -35,14 +35,20 @@ namespace Epam.NetMentoring.Observer.Store
             }
         }
 
-        public Item Buy(string itemName, int amount)
+        public Item Buy(IStore store, string itemName, int amount)
         {
-            return _store.Buy(itemName, amount);
-
+            if (store == null)
+                throw new ApplicationException("no store supplied");
+            return store.Buy(itemName, amount);
         }
-        public void OnShopItemAdded(ProductInfo info, int oldAmount)
+        public void OnShopItemAdded(ProductInfo info)
         {
-            Console.WriteLine("Notifcation for {0}: New item in Store: Name-> {1} |New Amount-> {2} |Old Amount-> {3}|Price-> {4} ", this.Name, info.Name, info.Amount, oldAmount, info.Price);
+            Console.WriteLine("Notifcation for {0}: New offer : Name-> {1} | Amount-> {2}|Price-> {3} ", this.Name, info.Name, info.Amount, info.Price);
+        }
+
+        public void OnLowItemCount(ProductInfo info)
+        {
+            Console.WriteLine("hurey up, Only {0} {1} remained",info.Amount, info.Name);
         }
     }
 }
