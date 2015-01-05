@@ -41,11 +41,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Const.cs" />
     <Compile Include="Substract.cs" />
     <Compile Include="Devide.cs" />
     <Compile Include="Multiply.cs" />
     <Compile Include="Add.cs" />
-    <Compile Include="Calculation.cs" />
+    <Compile Include="IOperation.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

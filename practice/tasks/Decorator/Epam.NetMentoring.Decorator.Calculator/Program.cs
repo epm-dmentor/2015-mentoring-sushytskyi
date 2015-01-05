@@ -6,8 +6,17 @@ namespace Epam.NetMentoring.Decorator.Calculator
     {
         static void Main(string[] args)
         {
-            var res = new Add(new Multiply(1,1),new Multiply(new Add(1,1), 10)).GetResult();
-   //         res = new Devide(12,5).GetResult();
+            var res = new Add(
+                new Multiply(
+                    new Const(12),
+                    new Const(3)),
+                    new Add(
+                        new Const(2)
+                        , new Devide(
+                            new Const(12),
+                            new Const(3)))).GetResult();
+
+            Console.WriteLine("Calculation result is: {0} ", res);
             Console.ReadLine();
         }
     }
