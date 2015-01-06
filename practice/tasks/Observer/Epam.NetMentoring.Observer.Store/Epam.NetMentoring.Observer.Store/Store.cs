@@ -27,7 +27,6 @@ namespace Epam.NetMentoring.Observer.Store
         {
             if (!_customerList.Contains(customer))
             {
-                customer.Subscribe(this);
                 _customerList.Add(customer);
                 return true;
             }
@@ -39,7 +38,6 @@ namespace Epam.NetMentoring.Observer.Store
             if (registredCustomer != null)
             {
                 _customerList.Remove(registredCustomer);
-                registredCustomer.UnSubscribe();
             }
         }
         public void SupplyItem(Item item)
@@ -90,7 +88,7 @@ namespace Epam.NetMentoring.Observer.Store
         {
             if (item == null)
                 return null;
-            var newItem = new Item(item.Name, (amount += item.Amount), price);
+            var newItem = new Item(item.Name, (amount + item.Amount), price);
             if (newItem.Amount <= _amountThreshold)
             {
                 return null;

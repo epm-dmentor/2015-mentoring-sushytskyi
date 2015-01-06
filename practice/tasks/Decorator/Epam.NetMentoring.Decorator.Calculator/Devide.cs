@@ -12,6 +12,7 @@
         }
         public int GetResult()
         {
+            //IT: Divde by zero exception
             return _op1.GetResult() / _op2.GetResult();
         }
     }

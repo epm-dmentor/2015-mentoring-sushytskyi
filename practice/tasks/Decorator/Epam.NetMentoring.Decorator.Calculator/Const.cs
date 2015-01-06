@@ -2,7 +2,8 @@
 {
     public class Const : IOperation
     {
-        private int _val = 0;
+        //IT: Readonly - assigned only in constructor
+        private int _val = 0; //IT: zero is already default value for int
         public Const(int val)
         {
             _val = val;

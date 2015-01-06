@@ -25,7 +25,6 @@ namespace Epam.NetMentoring.Observer.Store
             store.SupplyItem(new Item("Product2", 3, 3));
 
             customer1.Buy(store, "Product2", 2);
-            customer1.UnSubscribe();
 
 
             //IT: as usual everyone uses ReadKey(), but ReadLine is also OK.

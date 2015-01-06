@@ -2,6 +2,7 @@
 {
     public class Multiply : IOperation
     {
+        //IT: Readonly
         private IOperation _op1;
         private IOperation _op2;
 

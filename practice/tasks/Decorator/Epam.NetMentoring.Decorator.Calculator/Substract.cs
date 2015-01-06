@@ -2,6 +2,7 @@
 {
     public class Substract : IOperation
     {
+        //IT: readonly
         private IOperation _op1;
         private IOperation _op2;
 

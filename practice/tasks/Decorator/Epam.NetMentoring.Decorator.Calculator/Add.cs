@@ -2,6 +2,7 @@
 {
     public class Add : IOperation
     {
+        //IT: Readonly - it's assigned only in the coustructor
         private IOperation _op1;
         private IOperation _op2;
 

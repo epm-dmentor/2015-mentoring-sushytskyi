@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Epam.NetMentoring.Observer.Store")]
+[assembly: AssemblyTitle("StockExchange")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Epam.NetMentoring.Observer.Store")]
+[assembly: AssemblyProduct("StockExchange")]
 [assembly: AssemblyCopyright("Copyright ©  2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("bdb993c3-a9e1-48fc-b009-a5ab90e9fa29")]
+[assembly: Guid("151c48ae-86d7-4df7-a959-712a6d833e13")]
 
 // Version information for an assembly consists of the following four values:
 //
