@@ -3,8 +3,8 @@
     public class Substract : IOperation
     {
         //IT: readonly
-        private IOperation _op1;
-        private IOperation _op2;
+        private readonly IOperation _op1;
+        private readonly IOperation _op2;
 
         public Substract(IOperation op1, IOperation op2)
         {

@@ -1,4 +1,6 @@
-﻿namespace Epam.NetMentoring.CalculationService
+﻿using System;
+
+namespace Epam.NetMentoring.CalculationService
 {
     class Program
     {
@@ -6,8 +8,11 @@
         {
             ICalculationService nonCachedService = new CalculationService();
             ICalculationService cachedService = new CachedCalculationService(nonCachedService);
-            cachedService.Calculate(10, 10);
-           
+            Console.WriteLine(cachedService.Calculate(10, 10));
+            Console.WriteLine(cachedService.Calculate(10, 10));
+            Console.WriteLine(cachedService.Calculate(1, 10));
+            Console.ReadLine();
+
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Threading;
+
 namespace Epam.NetMentoring.CalculationService
 {
   public class CalculationService:ICalculationService

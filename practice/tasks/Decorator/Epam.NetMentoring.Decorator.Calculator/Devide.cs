@@ -1,9 +1,11 @@
-﻿namespace Epam.NetMentoring.Decorator.Calculator
+﻿using System;
+
+namespace Epam.NetMentoring.Decorator.Calculator
 {
     public class Devide : IOperation
     {
-        private IOperation _op1;
-        private IOperation _op2;
+        private readonly IOperation _op1;
+        private readonly IOperation _op2;
 
         public Devide(IOperation op1, IOperation op2)
         {
@@ -12,8 +14,18 @@
         }
         public int GetResult()
         {
+            int res=0;
             //IT: Divde by zero exception
-            return _op1.GetResult() / _op2.GetResult();
+            try
+            {
+                res = _op1.GetResult() / _op2.GetResult();
+            }
+            catch (DivideByZeroException ex)
+            {
+
+                Console.WriteLine(ex.Message);
+            }
+            return res;
         }
     }
 }
