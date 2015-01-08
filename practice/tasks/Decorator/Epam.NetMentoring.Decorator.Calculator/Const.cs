@@ -8,7 +8,7 @@
         {
             _val = val;
         }
-        public int GetResult()
+        public double GetResult()
         {
             return _val;
         }

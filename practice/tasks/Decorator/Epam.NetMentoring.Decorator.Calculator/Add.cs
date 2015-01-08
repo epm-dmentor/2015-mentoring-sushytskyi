@@ -11,7 +11,7 @@
             _op1 = op1;
             _op2 = op2;
         }
-        public  int GetResult()
+        public  double GetResult()
         {
             return _op1.GetResult() + _op2.GetResult();
         }

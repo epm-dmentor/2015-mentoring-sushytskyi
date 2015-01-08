@@ -12,9 +12,9 @@ namespace Epam.NetMentoring.Decorator.Calculator
             _op1 = op1;
             _op2 = op2;
         }
-        public int GetResult()
+        public double GetResult()
         {
-            int res=0;
+            double res = 0;
             //IT: Divde by zero exception
             try
             {

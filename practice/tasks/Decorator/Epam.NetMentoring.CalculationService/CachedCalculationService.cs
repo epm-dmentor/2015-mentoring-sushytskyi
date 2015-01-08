@@ -18,9 +18,13 @@ namespace Epam.NetMentoring.CalculationService
 
             public override bool Equals(object obj)
             {
-                if (obj == null || GetType() != obj.GetType())
+                if (obj == null)
                     return false;
-                var calcParams = (Params) obj;
+
+                var calcParams = obj as Params;
+                if (calcParams == null)
+                    return false;
+
                 return (calcParams._a == _a) && (calcParams._b == _b);
             }
 
@@ -31,14 +35,13 @@ namespace Epam.NetMentoring.CalculationService
         }
 
         private readonly ICalculationService _calculationService;
-        private decimal _calcRes;
         private readonly Dictionary<Params, decimal> _cache = new Dictionary<Params, decimal>();
         public CachedCalculationService(ICalculationService calculationService)
         {
             _calculationService = calculationService;
         }
         public decimal Calculate(decimal a, decimal b)
-        {
+        {          
             var parms = new Params(a, b);
             if (_cache.ContainsKey(parms))
             {
@@ -46,9 +49,9 @@ namespace Epam.NetMentoring.CalculationService
                 return _cache[parms];
             }
 
-            _calcRes = _calculationService.Calculate(a, b);
-            _cache.Add(parms, _calcRes);
-            return _calcRes;
+            var res = _calculationService.Calculate(a, b);
+            _cache.Add(parms, res);
+            return res;
         }
     }
 }

@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="CachedCalculationService.cs" />
     <Compile Include="CalculationService.cs" />
+    <Compile Include="ImprovedCalcService.cs" />
     <Compile Include="ICalculationService.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
