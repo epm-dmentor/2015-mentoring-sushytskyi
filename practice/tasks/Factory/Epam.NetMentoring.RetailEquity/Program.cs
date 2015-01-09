@@ -13,8 +13,7 @@ namespace Epam.NetMentoring.RetailEquity
             positions.Add(new Position("Future", 40, "NyOption"));
             positions.Add(new Position("Option", 56, "NyOption"));
 
-            var factory = new BankFactory(new PositionFilter());
-            var barcapPositions = factory.CreateBank("Barcap").Filter(positions);
+            var factory = new PositionFilterFactory().CreatePositionFilter("Barcap").FilterPositions(positions);
 
         }
     }

@@ -41,17 +41,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BankFactory.cs" />
-    <Compile Include="Barcap.cs" />
-    <Compile Include="Connacord.cs" />
-    <Compile Include="BOFA.cs" />
-    <Compile Include="IBank.cs" />
-    <Compile Include="IBankFactory.cs" />
-    <Compile Include="IEquityFilter.cs" />
+    <Compile Include="BOFAPositionFilter.cs" />
+    <Compile Include="ConnacordPositionFilter.cs" />
+    <Compile Include="BarcapPositionFilter.cs" />
+    <Compile Include="IPositionFilter.cs" />
+    <Compile Include="IPositionFilterFactory.cs" />
     <Compile Include="Position.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="EquityFilter.cs" />
+    <Compile Include="PositionFilterFactory.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
