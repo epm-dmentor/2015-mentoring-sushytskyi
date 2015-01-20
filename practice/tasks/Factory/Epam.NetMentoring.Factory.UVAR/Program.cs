@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace Epam.NetMentoring.Factory.UVAR
 {
@@ -7,25 +6,19 @@ namespace Epam.NetMentoring.Factory.UVAR
     {
         static void Main(string[] args)
         {
-            var emFeed = new EmTradeFeed(
-                new List<EmRecord>()
-                {
-                    new EmRecord(10, "sdfsd", 3, 4, new DateTime(2011, 10, 10), 20, 12, 34, "sdfsd"),
-                    new EmRecord(11, "sdfsddd", 5, 6, new DateTime(2051, 10, 10), 56, 234, 12, "ghjhklryt"),
-                    new EmRecord(11, "sdfsddd", 5, 6, new DateTime(2051, 10, 10), 56, 0, 12, "ghjhklryt")
-                }
-                );
+            //Em feeds Processing
+            var emFeedProcessor = new EmFeedProcessor();
+            emFeedProcessor.Process(new EmTradeFeedItem(11, "sdfsddd", 5, 6, new DateTime(2051, 10, 10), 56, 234, 12, "ghjhklryt"));
+            emFeedProcessor.Process(new EmTradeFeedItem(11, "sdfsddd", 5, 6, new DateTime(2051, 10, 10), 56, 0, 12,
+                "ghjhklryt"));
+            emFeedProcessor.Process(new EmTradeFeedItem(10, "sdfsd", 3, 4, new DateTime(2011, 10, 10), 20, 12, 34, "sdfsd"));
+            
+            //D1 Feeds Processing 
 
-            var d1feed = new D1TradeFeed(
-               new List<D1Record>()
-                {
-                    new D1Record(10, "sdfsd", 3, 4, new DateTime(2011, 10, 10), 20, 12, "vbvbb", "sdfsd"),
-                    new D1Record(11, "sdfsddd", 5, 6, new DateTime(2051, 10, 10), 56, 234, "bbnb", "ghjhklryt")
-                }
-                 );
+            var d1FeedProcessor = new Delata1FeedProcessor();
+            d1FeedProcessor.Process(new Delta1TradeFeedItem(10, "sdfsd", 3, 4, new DateTime(2011, 10, 10), 20, 12, "vbvbb", "sdfsd"));
+            d1FeedProcessor.Process(new Delta1TradeFeedItem(11, "sdfsddd", 5, 6, new DateTime(2051, 10, 10), 56, 234, "bbnb", "ghjhklryt"));
 
-            var processor = new FeedProcessor(new List<TradeFeed>() { emFeed, d1feed });
-            processor.ProcessItems().ForEach(s => Console.WriteLine(s));
 
         }
     }

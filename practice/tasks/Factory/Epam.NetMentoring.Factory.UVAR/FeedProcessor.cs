@@ -4,39 +4,40 @@ using System.Linq;
 
 namespace Epam.NetMentoring.Factory.UVAR
 {
-    public class FeedProcessor
+    public class FeedProcessor : IFeedProcessor
     {
-        private readonly IEnumerable<TradeFeed> _feedItems;
-        private readonly FeedManagerFactory _feedManager = new FeedManagerFactory();
-        public FeedProcessor(IEnumerable<TradeFeed> feedItems)
+        public void Process(TradeFeedItem item)
         {
-            _feedItems = feedItems;
-        }
-
-        public List<string> ProcessItems()
-        {
-            var matchingRes = new List<string>();
-            foreach (TradeFeed tradeFeed in _feedItems)
+            Console.WriteLine("Validation started");
+            List<string> validationErrors = Manager.Validate(item).ToList();
+            if (validationErrors.Count > 0)
             {
-                var feedManager = _feedManager.GetFeedManger(tradeFeed);
-                var validationErros = new List<string>();
-                if (feedManager.TryValidate(out validationErros))
-                {
-                    matchingRes = feedManager.MatchFeed().ToList();
-                }
-                else
-                {
-                    foreach (var erro in validationErros)
-                    {
-                        Console.WriteLine("Validation Failed for {0}", feedManager.GetType());
-                        Console.WriteLine(erro);
-                    }
-                }
-                feedManager.Save();
-
+                PrintValidationErrors(validationErrors);
+                return;
             }
-            return matchingRes;
+            Console.WriteLine("Validation finished");
+            Console.WriteLine("Matching account");
+            Console.WriteLine(Manager.Match(item));
+
+            if (Manager.Save(item))
+            {
+                Console.WriteLine("Item Saved");
+            }
+
+        }
+        protected virtual IFeedManager Manager
+        {
+            get { return new FeedManager(); }
         }
 
+        protected virtual void PrintValidationErrors(IEnumerable<string> errors)
+        {
+            Console.WriteLine("Validation Failed");
+            foreach (string error in errors)
+            {
+                Console.WriteLine(error);
+            }
+
+        }
     }
 }

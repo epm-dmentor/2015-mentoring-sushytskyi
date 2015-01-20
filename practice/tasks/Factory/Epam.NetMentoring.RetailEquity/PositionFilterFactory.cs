@@ -1,4 +1,6 @@
-﻿namespace Epam.NetMentoring.RetailEquity
+﻿using System;
+
+namespace Epam.NetMentoring.RetailEquity
 {
     public class PositionFilterFactory : IPositionFilterFactory
     {
@@ -16,6 +18,8 @@
                 case "BOFA":
                     filter = new BofaPositionFilter();
                     break;
+                default:
+                    throw new NoBankFoundException(String.Format("No bank found for Bank Name: {0}",bankName));
             }
             return filter;
         }

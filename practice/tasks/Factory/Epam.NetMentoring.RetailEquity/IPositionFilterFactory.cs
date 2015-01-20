@@ -1,5 +1,3 @@
-using System;
-
 namespace Epam.NetMentoring.RetailEquity
 {
     public interface IPositionFilterFactory

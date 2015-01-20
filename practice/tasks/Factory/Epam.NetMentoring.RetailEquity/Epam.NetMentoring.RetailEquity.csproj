@@ -46,6 +46,7 @@
     <Compile Include="BarcapPositionFilter.cs" />
     <Compile Include="IPositionFilter.cs" />
     <Compile Include="IPositionFilterFactory.cs" />
+    <Compile Include="NoBankFoundException.cs" />
     <Compile Include="Position.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

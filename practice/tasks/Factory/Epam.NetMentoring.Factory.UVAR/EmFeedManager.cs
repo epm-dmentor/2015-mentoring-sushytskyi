@@ -5,59 +5,49 @@ namespace Epam.NetMentoring.Factory.UVAR
 {
     public class EmFeedManager : IFeedManager
     {
-        private readonly EmTradeFeed _feed;
-        private readonly List<string> _errors = new List<string>();
-
-        public EmFeedManager(EmTradeFeed feed)
+        public IEnumerable<string> Validate(ITradeFeedItem item)
         {
-            this._feed = feed;
-        }
-        public bool TryValidate(out List<string> errors)
-        {
-            foreach (EmRecord record in _feed.Records)
+            var errorsList = new List<string>();
+            var emItem = item as EmTradeFeedItem;
+            if (emItem == null)
             {
-                ZeroAccountCheck(record);
+                errorsList.Add("item is not EmFeedItem");
+                return errorsList;
             }
-            if (_errors.Count > 0)
+            var error = ZeroAccountCheck(emItem);
+
+            if (error != String.Empty)
             {
-                errors = _errors;
-                return false;
+                errorsList.Add(error);
             }
-
-            Console.WriteLine("EM feed validated");
-            errors = new List<string>();
-            return true;
+            return errorsList;
         }
 
-        public void PrintErros()
+        private string ZeroAccountCheck(ITradeFeedItem item)
         {
-            foreach (var erro in _errors)
-            {
-                Console.WriteLine(erro);
-            }
+            var emItem = item as EmTradeFeedItem;
+            if (emItem == null)
+                return "";
+
+            if (emItem.SourceAccountId == 0)
+                return String.Format("Zero account found for trade ref: {0}", emItem.SourceTradeRef);
+            return "";
         }
 
-        private void ZeroAccountCheck(EmRecord record)
+        public string Match(ITradeFeedItem item)
         {
-            if (record.SourceAccountId == 0)
-                _errors.Add(String.Format("Zero account found for trade ref: {0}", record.SourceTradeRef));
-        }
+            var emItem = item as EmTradeFeedItem;
+            if (emItem == null)
+                return "";
 
-        public IEnumerable<string> MatchFeed()
-        {
-            List<string> res = new List<string>();
-            foreach (var record in _feed.Records)
-            {
-                res.Add(record.SourceAccountId + "-EM_FEED");
-            }
-
-            return res;
+            return emItem.SourceAccountId + "-EM_FEED";
         }
 
 
-        public void Save()
+        public bool Save(ITradeFeedItem item)
         {
-            Console.WriteLine("EM Feed, Saved");
+            var emItem = item as EmTradeFeedItem;
+            return emItem == null;
         }
     }
 }

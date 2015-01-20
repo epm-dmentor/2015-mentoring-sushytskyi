@@ -41,19 +41,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="D1Record.cs" />
-    <Compile Include="D1TradeFeed.cs" />
-    <Compile Include="EmRecord.cs" />
-    <Compile Include="EmTradeFeed.cs" />
-    <Compile Include="D1FeedManager .cs" />
+    <Compile Include="Delta1TradeFeedItem.cs" />
+    <Compile Include="Delata1FeedProcessor.cs" />
+    <Compile Include="EmFeedProcessor.cs" />
+    <Compile Include="EmTradeFeedItem.cs" />
+    <Compile Include="Delta1FeedManager .cs" />
     <Compile Include="EmFeedManager.cs" />
-    <Compile Include="FeedManagerFactory.cs" />
+    <Compile Include="FeedManager.cs" />
     <Compile Include="IFeedManager.cs" />
-    <Compile Include="IFeedManagerFactory.cs" />
+    <Compile Include="IFeedProcessor.cs" />
+    <Compile Include="ITradeFeedItem.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Record.cs" />
-    <Compile Include="TradeFeed.cs" />
+    <Compile Include="TradeFeedItem.cs" />
     <Compile Include="FeedProcessor.cs" />
   </ItemGroup>
   <ItemGroup>
