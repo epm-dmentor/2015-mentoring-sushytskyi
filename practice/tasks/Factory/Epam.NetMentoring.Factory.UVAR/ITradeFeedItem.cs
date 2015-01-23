@@ -2,6 +2,7 @@
 
 namespace Epam.NetMentoring.Factory.UVAR
 {
+    //IT: do not use interface for model, such approach is not used as usual. It's jsut not needed
     public interface ITradeFeedItem
     {
         int StagingId { get; set; }

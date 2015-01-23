@@ -16,6 +16,7 @@ namespace Epam.NetMentoring.Factory.UVAR
         {
         }
 
+        //IT: to much params in the constructor
         public TradeFeedItem(int stagingId, string sourceTradeRef, int counterpartyId, int principalId, DateTime valuationDate, decimal currentPrice, int sourceAccountId)
         {
             StagingId = stagingId;
