@@ -5,49 +5,52 @@ namespace Epam.NetMentoring.Factory.UVAR
 {
     public class EmFeedManager : IFeedManager
     {
-        public IEnumerable<string> Validate(ITradeFeedItem item)
+        public IEnumerable<ValidationError> Validate(TradeFeedItem item)
         {
-            var errorsList = new List<string>();
+            var errorsList = new List<ValidationError>();
             var emItem = item as EmTradeFeedItem;
             if (emItem == null)
             {
-                errorsList.Add("item is not EmFeedItem");
+                errorsList.Add(new ValidationError("item is not EmFeedItem"));
                 return errorsList;
             }
             var error = ZeroAccountCheck(emItem);
 
-            if (error != String.Empty)
+            if (error != null)
             {
                 errorsList.Add(error);
             }
             return errorsList;
         }
 
-        private string ZeroAccountCheck(ITradeFeedItem item)
+        private ValidationError ZeroAccountCheck(TradeFeedItem item)
         {
             var emItem = item as EmTradeFeedItem;
             if (emItem == null)
-                return "";
+                throw new ApplicationException("Not Em Item");
 
             if (emItem.SourceAccountId == 0)
-                return String.Format("Zero account found for trade ref: {0}", emItem.SourceTradeRef);
-            return "";
+                return new ValidationError(String.Format("Zero account found for trade ref: {0}", emItem.SourceTradeRef));
+            return null;
         }
 
-        public string Match(ITradeFeedItem item)
+        public string Match(TradeFeedItem item)
         {
             var emItem = item as EmTradeFeedItem;
             if (emItem == null)
-                return "";
+                return String.Empty;
 
-            return emItem.SourceAccountId + "-EM_FEED";
+            return String.Format(emItem.SourceAccountId + "-EM_FEED");
         }
 
 
-        public bool Save(ITradeFeedItem item)
+        public Guid Save(TradeFeedItem item)
         {
             var emItem = item as EmTradeFeedItem;
-            return emItem == null;
+            if (emItem == null)
+                throw new ApplicationException("Not EM Item");
+            Console.WriteLine("D1 feed Saved");
+            return Guid.NewGuid();
         }
     }
 }

@@ -6,58 +6,61 @@ namespace Epam.NetMentoring.Factory.UVAR
     public class Delta1FeedManager : IFeedManager
     {
         //IT: it's better to return ValidationError instead of just string
-        public IEnumerable<string> Validate(ITradeFeedItem item)
+        //IS: revorked below to use custom class to save errors
+        public IEnumerable<ValidationError> Validate(TradeFeedItem item)
         {
-            var errorsList = new List<string>();
+            var errorsList = new List<ValidationError>();
             var d1Item = item as Delta1TradeFeedItem;
             if (d1Item == null)
             {
-                errorsList.Add("item is not D1FeedItem");
+                errorsList.Add(new ValidationError("item is not D1FeedItem"));
                 return errorsList;
             }
             var error = ZeroMarketCheck(d1Item);
 
             //IT: String.IsNullOrWhiteSpace
-            if (error != String.Empty)
+            if (error != null)
             {
                 errorsList.Add(error);
             }
-
             return errorsList;
         }
 
-        private string ZeroMarketCheck(ITradeFeedItem item)
+        private ValidationError ZeroMarketCheck(TradeFeedItem item)
         {
             var d1Item = item as Delta1TradeFeedItem;
             if (d1Item == null)
                 //IT: String.Empty
-                return "";
+                // return String.Empty;
+                throw new ApplicationException("Not Delta1 item");
 
             //IT: String.Empty
             //IT: String.IsNullOrWhiteSpace() is better            
-            if (d1Item.Market == "")
-                return String.Format("Zero Market found for ref: {0}", d1Item.SourceTradeRef);
+            if (String.IsNullOrWhiteSpace(d1Item.Market))
+                return new ValidationError(String.Format("Zero Market not found for ref: {0}", d1Item.SourceTradeRef));
 
             //IT: String.Empty
-            return "";
+            return null;
         }
-
         //IT: String.Empty
-        public string Match(ITradeFeedItem item)
+        public string Match(TradeFeedItem item)
         {
             var d1Item = item as Delta1TradeFeedItem;
             if (d1Item == null)
-                return "";
+                return String.Empty;
 
             //IT: String.Format
-            return d1Item.SourceAccountId + "" + d1Item.CounterpartyId + "" + d1Item.PrincipalId;
+            return String.Format(d1Item.SourceAccountId + "" + d1Item.CounterpartyId + "" + d1Item.PrincipalId);
         }
 
-        public bool Save(ITradeFeedItem item)
+        public Guid Save(TradeFeedItem item)
         {
             var d1Item = item as Delta1TradeFeedItem;
             //IT: Show something in console :) to identify that Delta1 trade saved
-            return d1Item == null;
+            if (d1Item == null)
+                throw new ApplicationException("Not D1 feed");
+            Console.WriteLine("D1 feed Saved");
+            return Guid.NewGuid();
         }
 
     }

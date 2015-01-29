@@ -5,22 +5,22 @@ namespace Epam.NetMentoring.Factory.UVAR
 {
     class FeedManager : IFeedManager
     {
-        public IEnumerable<string> Validate(ITradeFeedItem item)
+        public IEnumerable<ValidationError> Validate(TradeFeedItem item)
         {
             Console.WriteLine("this is base validation");
-            return new List<string>();
+            return new List<ValidationError>();
         }
 
-        public string Match(ITradeFeedItem item)
+        public string Match(TradeFeedItem item)
         {
             Console.WriteLine("this is base Matching");
-            return "";
+            return String.Empty;
         }
 
-        public bool Save(ITradeFeedItem item)
+        public Guid Save(TradeFeedItem item)
         {
             Console.WriteLine("this is base saving");
-            return true;
+            return Guid.Empty;
         }
     }
 }

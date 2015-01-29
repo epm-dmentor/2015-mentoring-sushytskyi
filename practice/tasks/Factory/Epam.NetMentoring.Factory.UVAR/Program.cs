@@ -6,19 +6,79 @@ namespace Epam.NetMentoring.Factory.UVAR
     {
         static void Main(string[] args)
         {
-            //Em feeds Processing
-            var emFeedProcessor = new EmFeedProcessor();
-            emFeedProcessor.Process(new EmTradeFeedItem(11, "sdfsddd", 5, 6, new DateTime(2051, 10, 10), 56, 234, 12, "ghjhklryt"));
-            emFeedProcessor.Process(new EmTradeFeedItem(11, "sdfsddd", 5, 6, new DateTime(2051, 10, 10), 56, 0, 12,
-                "ghjhklryt"));
-            emFeedProcessor.Process(new EmTradeFeedItem(10, "sdfsd", 3, 4, new DateTime(2011, 10, 10), 20, 12, 34, "sdfsd"));
-            
-            //D1 Feeds Processing 
+            try
+            {
+                //Em feeds Processing
+                var emFeedProcessor = new EmFeedProcessor();
+                emFeedProcessor.Process(new EmTradeFeedItem()
+                {
+                    StagingId = 11,
+                    SourceTradeRef = "sdfsddd",
+                    CounterpartyId = 5,
+                    PrincipalId = 6,
+                    ValuationDate = new DateTime(2051, 10, 10),
+                    CurrentPrice = 56,
+                    SourceAccountId = 234,
+                    BrokerId = 12,
+                    Comments = "ghjhklryt"
+                });
+                emFeedProcessor.Process(new EmTradeFeedItem()
+                {
+                    StagingId = 11,
+                    SourceTradeRef = "sdfsddd",
+                    CounterpartyId = 5,
+                    PrincipalId = 6,
+                    ValuationDate = new DateTime(2051, 10, 10),
+                    CurrentPrice = 56,
+                    SourceAccountId = 0,
+                    BrokerId = 12,
+                    Comments = "ghjhklryt"
+                });
+                emFeedProcessor.Process(new EmTradeFeedItem()
+                {
+                    StagingId = 10,
+                    SourceTradeRef = "sdfsd",
+                    CounterpartyId = 3,
+                    PrincipalId = 4,
+                    ValuationDate = new DateTime(2011, 10, 10),
+                    CurrentPrice = 20,
+                    SourceAccountId = 12,
+                    BrokerId = 34,
+                    Comments = "sdfsd"
+                });
 
-            var d1FeedProcessor = new Delata1FeedProcessor();
-            d1FeedProcessor.Process(new Delta1TradeFeedItem(10, "sdfsd", 3, 4, new DateTime(2011, 10, 10), 20, 12, "vbvbb", "sdfsd"));
-            d1FeedProcessor.Process(new Delta1TradeFeedItem(11, "sdfsddd", 5, 6, new DateTime(2051, 10, 10), 56, 234, "bbnb", "ghjhklryt"));
+                //D1 Feeds Processing 
 
+                var d1FeedProcessor = new Delata1FeedProcessor();
+                d1FeedProcessor.Process(new Delta1TradeFeedItem()
+                {
+                    StagingId = 10,
+                    SourceTradeRef = "sdfsd",
+                    CounterpartyId = 3,
+                    PrincipalId = 4,
+                    ValuationDate = new DateTime(2011, 10, 10),
+                    CurrentPrice = 20,
+                    SourceAccountId = 12,
+                    SecurityId = "vbvbb",
+                    Market = "sdfsd"
+                });
+                d1FeedProcessor.Process(new Delta1TradeFeedItem()
+                {
+                    StagingId = 11,
+                    SourceTradeRef = "sdfsddd",
+                    CounterpartyId = 5,
+                    PrincipalId = 6,
+                    ValuationDate = new DateTime(2051, 10, 10),
+                    CurrentPrice = 56,
+                    SourceAccountId = 10,
+                    SecurityId = "bbnb",
+                    Market = "ghjhklryt"
+                });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
 
         }
     }

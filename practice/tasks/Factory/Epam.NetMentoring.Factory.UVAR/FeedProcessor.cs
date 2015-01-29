@@ -8,12 +8,13 @@ namespace Epam.NetMentoring.Factory.UVAR
     {
         public void Process(TradeFeedItem item)
         {
+            Guid saveId;
             Console.WriteLine("Validation started");
 
             //IT: why do not use var validationErrors ?
             //IT: in that case ToList might be reasonable to avoid double enumeration : Count & something can be in the method PrintValidationErrors
-            List<string> validationErrors = Manager.Validate(item).ToList();
-            if (validationErrors.Count > 0)
+            var validationErrors = Manager.Validate(item).ToList();
+            if (validationErrors.Any())
             {
                 PrintValidationErrors(validationErrors);
                 return;
@@ -23,10 +24,16 @@ namespace Epam.NetMentoring.Factory.UVAR
             Console.WriteLine(Manager.Match(item));
 
             //IT: saving is really very significant part, if something can't be saved due to an error, as usual an exception must be thrown
-            if (Manager.Save(item))
+            try
             {
-                Console.WriteLine("Item Saved");
+                saveId = Manager.Save(item);
             }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Exception during item saving", ex);
+            }
+
+            Console.WriteLine("Item Saved: {0}", saveId);
 
         }
         protected virtual IFeedManager Manager
@@ -35,13 +42,13 @@ namespace Epam.NetMentoring.Factory.UVAR
         }
 
         //IT: you made it to be overridable, but for such things as publishing errors we use DI
-        protected virtual void PrintValidationErrors(IEnumerable<string> errors)
+        protected virtual void PrintValidationErrors(IEnumerable<ValidationError> errors)
         {
             Console.WriteLine("Validation Failed");
             //IT: use var errror. Use var more, it's just convinient :)
-            foreach (string error in errors)
+            foreach (var error in errors)
             {
-                Console.WriteLine(error);
+                Console.WriteLine(error.ErrorText);
             }
 
         }

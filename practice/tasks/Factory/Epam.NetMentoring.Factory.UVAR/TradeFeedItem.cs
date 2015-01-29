@@ -2,7 +2,7 @@
 
 namespace Epam.NetMentoring.Factory.UVAR
 {
-    public class TradeFeedItem : ITradeFeedItem
+    public class TradeFeedItem
     {
         public int StagingId { get; set; }
         public string SourceTradeRef { get; set; }
@@ -11,21 +11,6 @@ namespace Epam.NetMentoring.Factory.UVAR
         public DateTime ValuationDate { get; set; }
         public decimal CurrentPrice { get; set; }
         public int SourceAccountId { get; set; }
-
-        public TradeFeedItem()
-        {
-        }
-
         //IT: to much params in the constructor
-        public TradeFeedItem(int stagingId, string sourceTradeRef, int counterpartyId, int principalId, DateTime valuationDate, decimal currentPrice, int sourceAccountId)
-        {
-            StagingId = stagingId;
-            SourceTradeRef = sourceTradeRef;
-            CounterpartyId = counterpartyId;
-            PrincipalId = principalId;
-            ValuationDate = valuationDate;
-            CurrentPrice = currentPrice;
-            SourceAccountId = sourceAccountId;
-        }
     }
 }
