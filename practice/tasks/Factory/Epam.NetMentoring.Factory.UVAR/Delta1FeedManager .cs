@@ -3,62 +3,43 @@ using System.Collections.Generic;
 
 namespace Epam.NetMentoring.Factory.UVAR
 {
+    //IT: do in the similar way everywhere
     public class Delta1FeedManager : IFeedManager
     {
-        //IT: it's better to return ValidationError instead of just string
-        //IS: revorked below to use custom class to save errors
         public IEnumerable<ValidationError> Validate(TradeFeedItem item)
         {
-            var errorsList = new List<ValidationError>();
-            var d1Item = item as Delta1TradeFeedItem;
-            if (d1Item == null)
-            {
-                errorsList.Add(new ValidationError("item is not D1FeedItem"));
-                return errorsList;
-            }
-            var error = ZeroMarketCheck(d1Item);
+            var d1Item = ConvertToDeltaOne(item);
 
-            //IT: String.IsNullOrWhiteSpace
-            if (error != null)
-            {
-                errorsList.Add(error);
-            }
+            var errorsList = new List<ValidationError>();
+
+            if (String.IsNullOrWhiteSpace(d1Item.Market))
+                errorsList.Add( new ValidationError(String.Format("Zero Market not found for ref: {0}", d1Item.SourceTradeRef)));
+
             return errorsList;
         }
 
-        private ValidationError ZeroMarketCheck(TradeFeedItem item)
+        private static Delta1TradeFeedItem ConvertToDeltaOne(TradeFeedItem item)
         {
             var d1Item = item as Delta1TradeFeedItem;
             if (d1Item == null)
-                //IT: String.Empty
-                // return String.Empty;
-                throw new ApplicationException("Not Delta1 item");
+            {
+                throw new ArgumentException(String.Format("Item is not of DeltaOne type, real time is: {0}", item.GetType()));
+            }
 
-            //IT: String.Empty
-            //IT: String.IsNullOrWhiteSpace() is better            
-            if (String.IsNullOrWhiteSpace(d1Item.Market))
-                return new ValidationError(String.Format("Zero Market not found for ref: {0}", d1Item.SourceTradeRef));
-
-            //IT: String.Empty
-            return null;
+            return d1Item;
         }
-        //IT: String.Empty
+
         public string Match(TradeFeedItem item)
         {
-            var d1Item = item as Delta1TradeFeedItem;
-            if (d1Item == null)
-                return String.Empty;
+            var d1Item = ConvertToDeltaOne(item);
 
-            //IT: String.Format
-            return String.Format(d1Item.SourceAccountId + "" + d1Item.CounterpartyId + "" + d1Item.PrincipalId);
+            return String.Format("{0}-{1}-{2}", d1Item.SourceAccountId, d1Item.CounterpartyId, d1Item.PrincipalId);
         }
 
         public Guid Save(TradeFeedItem item)
         {
-            var d1Item = item as Delta1TradeFeedItem;
-            //IT: Show something in console :) to identify that Delta1 trade saved
-            if (d1Item == null)
-                throw new ApplicationException("Not D1 feed");
+            var d1Item = ConvertToDeltaOne(item);
+
             Console.WriteLine("D1 feed Saved");
             return Guid.NewGuid();
         }

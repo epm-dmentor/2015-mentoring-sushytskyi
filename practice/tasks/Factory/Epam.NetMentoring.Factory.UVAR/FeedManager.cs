@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace Epam.NetMentoring.Factory.UVAR
 {
+    //IT: public!!!!!!
     class FeedManager : IFeedManager
     {
         public IEnumerable<ValidationError> Validate(TradeFeedItem item)
