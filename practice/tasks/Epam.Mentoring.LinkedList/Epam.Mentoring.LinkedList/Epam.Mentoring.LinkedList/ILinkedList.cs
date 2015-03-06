@@ -4,7 +4,7 @@ namespace Epam.Mentoring.LinkedList
 {
     public interface ILinkedList
     {
-        int Lenghts { get; }
+        int Lenght { get; }
         void Add(object item);
         void RemoveAt(int position);
         Object FindElementAt(int position);

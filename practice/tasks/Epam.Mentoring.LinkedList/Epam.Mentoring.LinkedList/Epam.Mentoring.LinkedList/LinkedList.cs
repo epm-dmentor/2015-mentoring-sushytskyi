@@ -8,17 +8,21 @@ namespace Epam.Mentoring.LinkedList
     public class LinkedList : IEnumerable, ILinkedList
     {
         private readonly Node _sentinel;
-        public int Lenghts { get; private set; }
+        public int Lenght { get; private set; }
 
         public LinkedList()
         {
             _sentinel = new Node { Value = "Sentinel" };
             _sentinel.Next = _sentinel;
             _sentinel.Previous = _sentinel;
-            Lenghts = 0;
+            Lenght = 0;
         }
+
         public void Add(object item)
         {
+            if (item == null)
+                throw new NullReferenceException();
+
             var newNode = new Node { Value = item };
             if (_sentinel.Next == _sentinel && _sentinel.Previous == _sentinel)
             {
@@ -36,7 +40,7 @@ namespace Epam.Mentoring.LinkedList
                 _sentinel.Previous.Next = newNode;
                 _sentinel.Previous = newNode;
             }
-            Lenghts++;
+            Lenght++;
         }
 
         public void RemoveAt(int position)
@@ -44,17 +48,16 @@ namespace Epam.Mentoring.LinkedList
             var node = GetNodeAt(position);
             node.Next.Previous = node.Previous;
             node.Previous.Next = node.Next;
-            Lenghts--;
+            Lenght--;
         }
 
         private Node GetNodeAt(int position)
         {
-
-            if (position >= Lenghts)
+            if (position >= Lenght || position < 0)
                 throw new ArgumentOutOfRangeException();
 
             var node = _sentinel.Next;
-            for (var i = 0; i < Lenghts; i++)
+            for (var i = 0; i < Lenght; i++)
             {
                 if (i == position)
                 {
@@ -65,16 +68,18 @@ namespace Epam.Mentoring.LinkedList
             return null;
         }
 
-
         public Object FindElementAt(int position)
         {
             return GetNodeAt(position).Value;
         }
 
-        public void AddAt(object element, int position)
+        public void AddAt(object item, int position)
         {
+            if (item == null)
+                throw new NullReferenceException();
+
             var newNode = new Node();
-            newNode.Value = element;
+            newNode.Value = item;
             var currentNode = GetNodeAt(position);
 
             newNode.Next = currentNode;
@@ -83,30 +88,44 @@ namespace Epam.Mentoring.LinkedList
             currentNode.Previous.Next = newNode;
             currentNode.Previous = newNode;
 
-            Lenghts++;
-
+            Lenght++;
         }
 
-        public void Remove(object element)
+        public void Remove(object item)
         {
-            for (var i = 0; i < Lenghts; i++)
+            if (item == null)
+                throw new NullReferenceException();
+
+            for (var i = 0; i < Lenght; i++)
             {
                 var node = GetNodeAt(i);
-                if (!node.Value.Equals(element)) continue;
+                if (!node.Value.Equals(item)) continue;
                 node.Next.Previous = node.Previous;
                 node.Previous.Next = node.Next;
-                Lenghts--;
+                Lenght--;
             }
         }
 
         public IEnumerator GetEnumerator()
         {
             var enumerableList = new List<object>();
-            for (var i = 0; i < Lenghts; i++)
+            for (var i = 0; i < Lenght; i++)
             {
                 enumerableList.Add(GetNodeAt(i));
             }
             return enumerableList.GetEnumerator();
         }
+
+        private class Node
+        {
+            public object Value { get; set; }
+            public Node Previous { get; set; }
+            public Node Next { get; set; }
+            public override string ToString()
+            {
+                return Value.ToString();
+            }
+        }
     }
 }
+

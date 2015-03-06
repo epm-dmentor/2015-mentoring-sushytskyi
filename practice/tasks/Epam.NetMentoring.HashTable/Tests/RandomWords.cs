@@ -8,7 +8,7 @@ namespace Epam.NetMentoring.HashTable
 {
     public class RandomWords
     {
-        private static Random random = new Random((int)DateTime.Now.Ticks);//thanks to McAden
+        private static Random random = new Random((int)DateTime.Now.Ticks);
         private static string RandomString(int size)
         {
             StringBuilder builder = new StringBuilder();
