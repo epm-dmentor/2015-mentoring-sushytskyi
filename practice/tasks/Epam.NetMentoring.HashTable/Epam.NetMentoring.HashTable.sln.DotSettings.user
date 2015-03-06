@@ -1,8 +1,0 @@
-﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
-	<s:Boolean x:Key="/Default/CodeStyle/LiveTemplatesUseVar/PreferVar/@EntryValue">False</s:Boolean>
-	<s:Boolean x:Key="/Default/Housekeeping/UnitTestingMru/UnitTestSessionPersistentData/=9AD2CC88828F4A6EB41461F7816BC0E9/@KeyIndexDefined">True</s:Boolean>
-	<s:String x:Key="/Default/Housekeeping/UnitTestingMru/UnitTestSessionPersistentData/=9AD2CC88828F4A6EB41461F7816BC0E9/Name/@EntryValue">NewHashTable_Empty_Succeed</s:String>
-	<s:String x:Key="/Default/Housekeeping/UnitTestingMru/UnitTestSessionPersistentData/=9AD2CC88828F4A6EB41461F7816BC0E9/XmlSerializedElements/@EntryValue">&lt;Session&gt;&lt;Elements&gt;&lt;UnitTestElement Provider="nUnit" Id="Tests.Tests" type="NUnitTestFixtureElement" Project="265C6F06-2B4F-48DD-9F0D-9136B9B71D35" /&gt;&lt;UnitTestElement Provider="nUnit" Id="Tests.Tests.NewHashTable_Empty_Succeed" ParentId="Tests.Tests" type="NUnitTestElement" TypeName="Tests.Tests" MethodName="NewHashTable_Empty_Succeed" Project="265C6F06-2B4F-48DD-9F0D-9136B9B71D35" /&gt;&lt;/Elements&gt;&lt;/Session&gt;</s:String>
-	
-	
-	</wpf:ResourceDictionary>
