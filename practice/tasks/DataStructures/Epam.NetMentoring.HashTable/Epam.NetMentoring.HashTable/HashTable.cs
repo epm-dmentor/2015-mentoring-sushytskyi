@@ -1,93 +1,85 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Epam.NetMentoring.HashTable
 {
     public class HashTable
     {
-        public LinkedList<KeyValuePair<WordEntity, WordDefinition>>[] _list = new LinkedList<KeyValuePair<WordEntity, WordDefinition>>[0];
-       
-        //aproximate number of words in oxford dictionary used for compresion
-        private const int Compression = 700;
+        //default count 10;
+        internal Bucket[] Items = new Bucket[10];
+
         public WordDefinition this[WordEntity key]
         {
-            get { return GetItem(key).Value; }
+            get
+            {
+                KeyValue result = null;
+                var keyCompresed = HashCompression(key.GetHashCode());
+
+                if (Items[keyCompresed] != null)
+                    result = Items[keyCompresed].GetItem(key);
+
+                if (result == null)
+                    throw new KeyNotFoundException();
+                return result.Value;
+            }
             set
             {
-                AddItem(key, value);
-            }
-        }
+                var keyCode = HashCompression(key.GetHashCode());
 
-        private void AddItem(WordEntity key, WordDefinition value)
-        {
-            var keyCode = HashCompression(key.GetHashCode());
-
-            if (_list.Length > keyCode)
-            {
-                if (_list[keyCode] != null)
-                    _list[keyCode].AddFirst(new KeyValuePair<WordEntity, WordDefinition>(key, value));
+                if (GetLoadFactor() < 90)
+                {
+                    if (Items[keyCode] != null)
+                        Items[keyCode].AddItem(key, value);
+                    else
+                    {
+                        var bucket = new Bucket();
+                        bucket.AddItem(key, value);
+                        Items[keyCode] = bucket;
+                    }
+                }
                 else
                 {
-                    var linkedList = new LinkedList<KeyValuePair<WordEntity, WordDefinition>>();
-                    linkedList.AddFirst(new KeyValuePair<WordEntity, WordDefinition>(key, value));
-                    _list[keyCode] = linkedList;
+                    Array.Resize(ref Items, Items.Length * 2);
+                    var bucket = new Bucket();
+                    bucket.AddItem(key, value);
+                    Items[keyCode] = bucket;
                 }
-
             }
-            else
-            {
-                Array.Resize(ref _list, keyCode + 1);
-                var linkedList = new LinkedList<KeyValuePair<WordEntity, WordDefinition>>();
-                linkedList.AddFirst(new KeyValuePair<WordEntity, WordDefinition>(key, value));
-                _list[keyCode] = linkedList;
-
-            }
-
         }
 
-        private KeyValuePair<WordEntity, WordDefinition> GetItem(WordEntity key)
+        private int GetLoadFactor()
         {
-            var keyCode = HashCompression(key.GetHashCode());
-
-            if (_list.Length <= keyCode)
-                return new KeyValuePair<WordEntity, WordDefinition>();
-
-            var item = _list[keyCode];
-
-            if (item != null)
+            double filledBuckets = 0;
+            int result = 0;
+            foreach (Bucket item in Items)
             {
-                if (item.Count == 1)
-                    return item.First();
-                foreach (KeyValuePair<WordEntity, WordDefinition> keyValuePair in item)
+                if (item != null)
                 {
-                    if (keyValuePair.Key.Equals(key))
-                        return keyValuePair;
+                    filledBuckets++;
                 }
             }
-            return new KeyValuePair<WordEntity, WordDefinition>();
+            result = (int)(filledBuckets / Items.Length * 100);
+            return result;
         }
 
         private int HashCompression(int hash)
         {
-          var result= hash % Compression;
+            var result = hash % Items.Length;
             return result;
         }
 
         public WordDefinition Contains(WordDefinition wordD)
         {
-            foreach (LinkedList<KeyValuePair<WordEntity, WordDefinition>> keyValuePairs in _list)
+            foreach (Bucket bucket in Items)
             {
-                if (keyValuePairs != null)
+                if (bucket != null)
                 {
-                    foreach (KeyValuePair<WordEntity, WordDefinition> keyValuePair in keyValuePairs)
-                    {
-                        if (keyValuePair.Value.Equals(wordD))
-                            return keyValuePair.Value;
-                    }
+                    bucket.Contains(wordD);
                 }
             }
             return null;
         }
+
+
     }
 }

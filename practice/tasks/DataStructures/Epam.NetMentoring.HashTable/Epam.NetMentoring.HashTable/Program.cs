@@ -4,6 +4,7 @@
     {
         static void Main(string[] args)
         {
+
             var list = new HashTable();
             WordEntity en1 = new WordEntity { Type = WordType.Noun, Word = "Fuck" };
             WordDefinition df1 = new WordDefinition { Definition = "Fucking music" };
