@@ -49,9 +49,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Epam.Mentoring.LinkedList\Epam.Mentoring.LinkedList.csproj">
+    <ProjectReference Include="..\Epam.Mentoring.LinkedList.ConsoleApp\Epam.Mentoring.LinkedList.ConsoleApp.csproj">
       <Project>{deb5d2e4-43fb-4be7-af24-c7c05a439f30}</Project>
-      <Name>Epam.Mentoring.LinkedList</Name>
+      <Name>Epam.Mentoring.LinkedList.ConsoleApp</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
