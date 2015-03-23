@@ -7,48 +7,34 @@ namespace Epam.NetMentoring.Factory.UVAR
     {
         public IEnumerable<ValidationError> Validate(TradeFeedItem item)
         {
+            var emItem = ConvertToEm(item);
             var errorsList = new List<ValidationError>();
-            var emItem = item as EmTradeFeedItem;
-            if (emItem == null)
-            {
-                errorsList.Add(new ValidationError("item is not EmFeedItem"));
-                return errorsList;
-            }
-            var error = ZeroAccountCheck(emItem);
 
-            if (error != null)
-            {
-                errorsList.Add(error);
-            }
+            if (emItem.SourceAccountId == 0)
+                errorsList.Add(new ValidationError(String.Format("Zero Market not found for ref: {0}", emItem.SourceTradeRef)));
+
             return errorsList;
         }
 
-        private ValidationError ZeroAccountCheck(TradeFeedItem item)
+        private static EmTradeFeedItem ConvertToEm(TradeFeedItem item)
         {
-            var emItem = item as EmTradeFeedItem;
-            if (emItem == null)
-                throw new ApplicationException("Not Em Item");
-
-            if (emItem.SourceAccountId == 0)
-                return new ValidationError(String.Format("Zero account found for trade ref: {0}", emItem.SourceTradeRef));
-            return null;
+            var EmItem = item as EmTradeFeedItem;
+            if (EmItem == null)
+            {
+                throw new ArgumentException(String.Format("Item is not of Em type, real type is: {0}", item.GetType()));
+            }
+            return EmItem;
         }
 
         public string Match(TradeFeedItem item)
         {
-            var emItem = item as EmTradeFeedItem;
-            if (emItem == null)
-                return String.Empty;
-
-            return String.Format(emItem.SourceAccountId + "-EM_FEED");
+            var emItem = ConvertToEm(item);
+            return String.Format("{0}-{1}", emItem.SourceAccountId, "-EM_FEED");
         }
-
 
         public Guid Save(TradeFeedItem item)
         {
-            var emItem = item as EmTradeFeedItem;
-            if (emItem == null)
-                throw new ApplicationException("Not EM Item");
+            var emItem = ConvertToEm(item);
             Console.WriteLine("D1 feed Saved");
             return Guid.NewGuid();
         }

@@ -11,6 +11,5 @@ namespace Epam.NetMentoring.Factory.UVAR
         public DateTime ValuationDate { get; set; }
         public decimal CurrentPrice { get; set; }
         public int SourceAccountId { get; set; }
-        //IT: to much params in the constructor
     }
 }

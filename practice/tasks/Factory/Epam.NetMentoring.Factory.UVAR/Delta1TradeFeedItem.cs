@@ -1,7 +1,4 @@
-﻿using System;
-//IT: unsused name space!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-namespace Epam.NetMentoring.Factory.UVAR
+﻿namespace Epam.NetMentoring.Factory.UVAR
 {
     public class Delta1TradeFeedItem : TradeFeedItem
     {
