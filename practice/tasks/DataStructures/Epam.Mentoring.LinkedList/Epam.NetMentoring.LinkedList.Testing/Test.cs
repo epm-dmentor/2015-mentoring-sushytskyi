@@ -107,7 +107,7 @@ namespace Epam.NetMentoring.Testing
             list.Add(item1);
             list.Add(item2);
             list.Add(item3);
-        
+
             Assert.AreEqual(lenght, list.Lenght);
             Assert.AreEqual(item2, list.FindElementAt(1));
         }
@@ -139,7 +139,7 @@ namespace Epam.NetMentoring.Testing
             list.Add(item1);
             list.Add(item2);
             list.RemoveAt(0);
-            
+
             Assert.AreEqual(lenght, list.Lenght);
             Assert.AreEqual(item2, list.FindElementAt(0));
         }

@@ -1,5 +1,4 @@
-﻿
-namespace Epam.Mentoring.LinkedList
+﻿namespace Epam.Mentoring.LinkedList
 {
     internal class Node
     {

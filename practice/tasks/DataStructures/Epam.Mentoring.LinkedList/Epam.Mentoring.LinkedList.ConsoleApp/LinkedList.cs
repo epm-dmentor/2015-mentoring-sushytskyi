@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
-using NUnit.Framework;
 
 namespace Epam.Mentoring.LinkedList
 {
-
     public class LinkedList : IEnumerable, ILinkedList
     {
         //IT: what the name does mean? Is't <_head> better?
@@ -116,7 +113,7 @@ namespace Epam.Mentoring.LinkedList
             //IS: If request 6th item when we have 6 items in list will get ArgumentOutOfRangeException
             var currentNode = GetNodeAt(position);
 
-          //IS: put new node on position of current node, shift current node on the right  
+            //IS: put new node on position of current node, shift current node on the right  
             newNode.Next = currentNode;
             newNode.Previous = currentNode.Previous;
 
@@ -132,7 +129,7 @@ namespace Epam.Mentoring.LinkedList
                 throw new ArgumentNullException("item");
 
             int i = 0;
-            while (i<Lenght)
+            while (i < Lenght)
             {
                 var node = GetNodeAt(i);
                 if (node.Value.Equals(item))
@@ -143,18 +140,18 @@ namespace Epam.Mentoring.LinkedList
                     break;
                 }
                 i++;
-            }            
+            }
         }
 
         public IEnumerator GetEnumerator()
         {
             int i = 0;
-            while (i<Lenght)
+            while (i < Lenght)
             {
                 yield return GetNodeAt(i);
                 i++;
             }
-            
+
         }
     }
 }
