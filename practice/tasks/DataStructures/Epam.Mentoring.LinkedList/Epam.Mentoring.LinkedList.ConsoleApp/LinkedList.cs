@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using NUnit.Framework;
 
 namespace Epam.Mentoring.LinkedList
 {
@@ -8,45 +9,48 @@ namespace Epam.Mentoring.LinkedList
     public class LinkedList : IEnumerable, ILinkedList
     {
         //IT: what the name does mean? Is't <_head> better?
-        private readonly Node _sentinel;
+        //IS: Use dummy node to avoid NullReference check
+        private readonly Node _dummyNode;
         public int Lenght { get; private set; }
 
         public LinkedList()
         {
             //IT: Wrong approach, there is a risk of infinite loop. Do not use such approache any more
             //IT: initialy there should not be any nodes at all :) as we haven't added anything
-            _sentinel = new Node { Value = "Sentinel" };
-            _sentinel.Next = _sentinel;
-            _sentinel.Previous = _sentinel;
 
-            //IT: https://msdn.microsoft.com/en-us/library/83fhsxwc.aspx
-            Lenght = 0;
+            //IS: create dummy node linked on itself with dummy value
+            _dummyNode = new Node { Value = "DummyValue" };
+            _dummyNode.Next = _dummyNode;
+            _dummyNode.Previous = _dummyNode;
         }
 
         public void Add(object item)
         {
             //IT: Never, never again! Do not use null reference exception, use ArgumentNullException and pass argument name into constructor
             if (item == null)
-                throw new NullReferenceException();
+                throw new ArgumentNullException("item");
 
             var newNode = new Node { Value = item };
 
             //IT: we need to add to the end, as your approache will be changed due to previous comment this part must be re-written at all
-            if (_sentinel.Next == _sentinel && _sentinel.Previous == _sentinel)
+            //IS: Note: LastItem.next always points to dummy, dummyPrevious points to lastItem
+            //IS: If first element in the linked list
+            if (_dummyNode.Next == _dummyNode && _dummyNode.Previous == _dummyNode)
             {
-                _sentinel.Next = newNode;
-                newNode.Previous = _sentinel;
+                _dummyNode.Next = newNode;
+                newNode.Previous = _dummyNode;
 
-                _sentinel.Previous = newNode;
-                newNode.Next = _sentinel;
+                _dummyNode.Previous = newNode;
+                newNode.Next = _dummyNode;
 
             }
             else
+            //If not the first item then added to the end. 
             {
-                newNode.Next = _sentinel;
-                newNode.Previous = _sentinel.Previous;
-                _sentinel.Previous.Next = newNode;
-                _sentinel.Previous = newNode;
+                newNode.Next = _dummyNode;
+                newNode.Previous = _dummyNode.Previous;
+                _dummyNode.Previous.Next = newNode;
+                _dummyNode.Previous = newNode;
             }
             Lenght++;
         }
@@ -54,9 +58,11 @@ namespace Epam.Mentoring.LinkedList
         public void RemoveAt(int position)
         {
             //IT: null reference exception is possisble
+            //IS: corrected
             var node = GetNodeAt(position);
 
             //IT: due to changin an approach it will be changed, otherwise you will have null reference exception very often
+            //No need to check for NullRef, due to DummyNode circular referene.   
             node.Next.Previous = node.Previous;
             node.Previous.Next = node.Next;
             Lenght--;
@@ -66,41 +72,51 @@ namespace Epam.Mentoring.LinkedList
         {
             if (position >= Lenght || position < 0)
                 //IT: more information must be provided to help debuggin people that will use your code
-                throw new ArgumentOutOfRangeException();
+                //IS: done
+                throw new ArgumentOutOfRangeException("position", "current lenght: " + Lenght);
 
-            var node = _sentinel.Next;
+            //IS: if list empty and _dummyNode.Next returns dummy we wont get to this part of code due to Lenght=0; checked above
+            var node = _dummyNode.Next;
 
-            //IT: it's better to use while loop for iterating throught linked list
-            for (var i = 0; i < Lenght; i++)
+            int i = 0;
+            while (i < Lenght)
             {
                 if (i == position)
                 {
                     return node;
                 }
                 node = node.Next;
+                i++;
             }
 
             //IT: null refference exception is possible in a future use
-            return null;
+            //IS: To avoid Null Ref
+            return new Node();
         }
 
         public Object FindElementAt(int position)
         {
             //IT: currently null reference exception is possible
+            //IS: corrected
             return GetNodeAt(position).Value;
         }
 
         public void AddAt(object item, int position)
         {
-            //IT: as it was mentioned it not a cceptable            
+            //IT: as it was mentioned it not a cceptable      
+            //IS: corrected
             if (item == null)
-                throw new NullReferenceException();
+                throw new ArgumentNullException("item");
 
             var newNode = new Node();
             newNode.Value = item;
+
             //IT: what happend if I'd like to insert to position 6 when there are 6 elements?
+            //IS: Get the node by position counting from 0 (6 items in list, last item position 5)
+            //IS: If request 6th item when we have 6 items in list will get ArgumentOutOfRangeException
             var currentNode = GetNodeAt(position);
 
+          //IS: put new node on position of current node, shift current node on the right  
             newNode.Next = currentNode;
             newNode.Previous = currentNode.Previous;
 
@@ -113,42 +129,32 @@ namespace Epam.Mentoring.LinkedList
         public void Remove(object item)
         {
             if (item == null)
-                throw new NullReferenceException();
+                throw new ArgumentNullException("item");
 
-            //IT: for iterating linked list it's better to use while loop
-            for (var i = 0; i < Lenght; i++)
+            int i = 0;
+            while (i<Lenght)
             {
                 var node = GetNodeAt(i);
-                //IT: avoid using continue as much as possible
-                if (!node.Value.Equals(item)) continue;
-                node.Next.Previous = node.Previous;
-                node.Previous.Next = node.Next;
-                Lenght--;
-            }
+                if (node.Value.Equals(item))
+                {
+                    node.Next.Previous = node.Previous;
+                    node.Previous.Next = node.Next;
+                    Lenght--;
+                    break;
+                }
+                i++;
+            }            
         }
 
         public IEnumerator GetEnumerator()
         {
-            //IT: good, it event may work :) but now creating new list of object is prohibited AND 
-            //IT: now it's not lazy evaluation of items. should be lazy, one by one
-            var enumerableList = new List<object>();
-            for (var i = 0; i < Lenght; i++)
+            int i = 0;
+            while (i<Lenght)
             {
-                enumerableList.Add(GetNodeAt(i));
+                yield return GetNodeAt(i);
+                i++;
             }
-            return enumerableList.GetEnumerator();
-        }
-
-        //move this sub-class to different class, but still make it subclass of linked list
-        private class Node
-        {
-            public object Value { get; set; }
-            public Node Previous { get; set; }
-            public Node Next { get; set; }
-            public override string ToString()
-            {
-                return Value.ToString();
-            }
+            
         }
     }
 }

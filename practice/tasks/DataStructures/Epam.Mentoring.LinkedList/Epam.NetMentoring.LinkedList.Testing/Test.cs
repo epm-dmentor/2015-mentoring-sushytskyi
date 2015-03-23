@@ -21,7 +21,7 @@ namespace Epam.NetMentoring.Testing
             Assert.AreEqual(item, list.FindElementAt(0));
         }
 
-        [Test, ExpectedException(typeof(NullReferenceException))]
+        [Test, ExpectedException(typeof(ArgumentNullException))]
         public void AddNull_Exception()
         {
             var list = new LinkedList();
@@ -334,7 +334,7 @@ namespace Epam.NetMentoring.Testing
         {
             var lenght = 0;
             var list = new LinkedList();
-            var item = new object();
+            var item = 1;
             list.Add(item);
             list.Remove(item);
 
@@ -355,7 +355,7 @@ namespace Epam.NetMentoring.Testing
             Assert.AreEqual(item1, list.FindElementAt(0));
         }
 
-        [Test, ExpectedException(typeof(NullReferenceException))]
+        [Test, ExpectedException(typeof(ArgumentNullException))]
         public void ListRemoveNull_Exception()
         {
             var list = new LinkedList();
@@ -367,9 +367,9 @@ namespace Epam.NetMentoring.Testing
         public void List3ItemsRemove1st_SequenceSaved()
         {
             var list = new LinkedList();
-            object item1 = new object();
-            object item2 = new object();
-            object item3 = new object();
+            object item1 = 1;
+            object item2 = 2;
+            object item3 = 3;
 
             list.Add(item1);
             list.Add(item2);
@@ -401,9 +401,9 @@ namespace Epam.NetMentoring.Testing
         public void List3ItemsRemove2nd_SequenceSaved()
         {
             var list = new LinkedList();
-            object item1 = new object();
-            object item2 = new object();
-            object item3 = new object();
+            object item1 = 1;
+            object item2 = 2;
+            object item3 = 3;
 
             list.Add(item1);
             list.Add(item2);
@@ -428,6 +428,7 @@ namespace Epam.NetMentoring.Testing
 
             foreach (var item in list)
             {
+                var t = item;
                 Assert.NotNull(item);
             }
         }
