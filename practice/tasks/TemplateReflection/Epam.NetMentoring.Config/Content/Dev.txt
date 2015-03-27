@@ -1,0 +1,20 @@
+//Incorrect settings which will be skipped.
+
+sfdsdf.EPAM.NetMentoring.Config.Service.User=UserInccorect1
+sfdsdf.Config.Service.User=UserInccorect1
+NetMentoring.Config.Service1.User=UserInccorect1
+sdfsdf.Epam.NetMentoring.Config.Service.ConStr=INCcorrect11
+sfdsdf.Config.Service.Test=TestInccorect
+dfConfig.Service.Test=Config1
+
+//Correct but will be skipped
+Test=sdfsadfsadfasd
+Service.ConStr=correct1dd1
+Config.Service.ConStr=NotAString
+
+//The best matched
+NetMentoring.Config.Service.ConStr=correct11
+Service.Test=TestINCorrect11
+Service.Count=12
+Service.User=CorrectUser
+Price=12.20
