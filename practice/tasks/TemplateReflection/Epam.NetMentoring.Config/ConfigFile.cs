@@ -59,6 +59,10 @@ namespace Epam.NetMentoring.Config
             {
                 Console.WriteLine(ex.Message);
             }
+            catch (DirectoryNotFoundException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
             return settings;
         }
     }
