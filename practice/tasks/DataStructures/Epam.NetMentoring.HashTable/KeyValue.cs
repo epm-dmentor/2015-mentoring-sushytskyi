@@ -10,7 +10,5 @@
             Key = key;
             Value = value;
         }
-
-        public KeyValue(){}
     }
 }
