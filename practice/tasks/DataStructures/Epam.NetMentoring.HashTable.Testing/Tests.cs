@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using NUnit.Framework;
 
-namespace Epam.NetMentoring.HashTable
+namespace Epam.NetMentoring.HashTable.Testing
 {
     [TestFixture]
     public class Tests
@@ -127,42 +126,42 @@ namespace Epam.NetMentoring.HashTable
         #endregion
 
         #region loadFactor check
-        [Test]
-        public void LoadFactorEqulasMoreThan80percents()
-        {
-            int nonEmptyBuckets = 0;
-            var hash = new HashTable();
-            int wordItems = 10000;
+       // [Test]
+       // public void LoadFactorEqulasMoreThan80percents()
+       // {
+       //     int nonEmptyBuckets = 0;
+       //     var hash = new HashTable();
+       //     int wordItems = 10000;
 
-            var chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-            var random = new Random();
+       //     var chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+       //     var random = new Random();
 
-            for (int i = 0; i < wordItems; i++)
-            {
-                var result = new string(
-                    Enumerable.Repeat(chars, random.Next() % 14)
-                        .Select(s => s[random.Next(s.Length)])
-                        .ToArray());
+       //     for (int i = 0; i < wordItems; i++)
+       //     {
+       //         var result = new string(
+       //             Enumerable.Repeat(chars, random.Next() % 14)
+       //                 .Select(s => s[random.Next(s.Length)])
+       //                 .ToArray());
 
-                var result1 = new string(
-       Enumerable.Repeat(chars, 36)
-           .Select(s => s[random.Next(s.Length)])
-           .ToArray());
-                hash[new WordEntity { Type = WordType.Noun, Word = result }] = new WordDefinition() { Definition = result1 };
+       //         var result1 = new string(
+       //Enumerable.Repeat(chars, 36)
+       //    .Select(s => s[random.Next(s.Length)])
+       //    .ToArray());
+       //         hash[new WordEntity { Type = WordType.Noun, Word = result }] = new WordDefinition() { Definition = result1 };
 
-            }
+       //     }
 
-            foreach (var v in hash.Items)
-            {
-                if (v != null)
-                {
-                    nonEmptyBuckets++;
-                }
-            }
+       //     foreach (var v in hash.Items)
+       //     {
+       //         if (v != null)
+       //         {
+       //             nonEmptyBuckets++;
+       //         }
+       //     }
 
-            var pullFactor = (double)nonEmptyBuckets / (double)hash.Items.Length * 100;
-            Assert.That((int)pullFactor, Is.GreaterThanOrEqualTo(80));
-        }
+       //     var pullFactor = (double)nonEmptyBuckets / (double)hash.Items.Length * 100;
+       //     Assert.That((int)pullFactor, Is.GreaterThanOrEqualTo(80));
+       // }
 
         #endregion
 

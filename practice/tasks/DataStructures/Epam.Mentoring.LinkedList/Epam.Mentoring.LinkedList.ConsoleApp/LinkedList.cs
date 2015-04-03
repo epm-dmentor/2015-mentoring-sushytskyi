@@ -8,13 +8,18 @@ namespace Epam.Mentoring.LinkedList
     {
         //used to determine either first or last element as we use circular data structure 
         //and our list is double linked 
-        private readonly Node _dummyNode;
+        private Node _dummyNode;
         public int Lenght { get; private set; }
 
         public LinkedList()
         {
             //create dummy node linked on itself with dummy value
             //IT: InitiateCercularList
+            InitCercularList();
+        }
+
+        private void InitCercularList()
+        {
             _dummyNode = new Node { Value = "DummyValue" };
             _dummyNode.Next = _dummyNode;
             _dummyNode.Previous = _dummyNode;
@@ -28,25 +33,7 @@ namespace Epam.Mentoring.LinkedList
             var newNode = new Node { Value = item };
             //Note: LastItem.next always points to dummy, dummyPrevious points to lastItem
             //if first element in the linked list
-            if (_dummyNode.Next == _dummyNode &&
-                _dummyNode.Previous == _dummyNode)
-            {
-                _dummyNode.Next = newNode;
-                newNode.Previous = _dummyNode;
-
-                _dummyNode.Previous = newNode;
-                newNode.Next = _dummyNode;
-
-            }
-            else
-            //If not the first item then added to the end. 
-            {
-                //IT: code is duplicated
-                newNode.Next = _dummyNode;
-                newNode.Previous = _dummyNode.Previous;
-                _dummyNode.Previous.Next = newNode;
-                _dummyNode.Previous = newNode;
-            }
+            AddNodeInFront(newNode, _dummyNode);
             Lenght++;
         }
 
@@ -55,9 +42,14 @@ namespace Epam.Mentoring.LinkedList
             var node = GetNodeAt(position);
 
             //IT: code is duplicated
+            RemoveFromLinkedList(node);
+            Lenght--;
+        }
+
+        private static void RemoveFromLinkedList(Node node)
+        {
             node.Next.Previous = node.Previous;
             node.Previous.Next = node.Next;
-            Lenght--;
         }
 
         //always return either real node or an exception. Null is not possible
@@ -94,18 +86,21 @@ namespace Epam.Mentoring.LinkedList
             if (item == null)
                 throw new ArgumentNullException("item");
 
-            var newNode = new Node();
-            newNode.Value = item;
-            var currentNode = GetNodeAt(position);
+            var newNode = new Node { Value = item };
 
-            //IT: code is duplicated
+            var currentNode = Lenght == position ? _dummyNode : GetNodeAt(position);
+
+            AddNodeInFront(newNode, currentNode);
+            Lenght++;
+        }
+
+        private static void AddNodeInFront(Node newNode, Node currentNode)
+        {
             newNode.Next = currentNode;
             newNode.Previous = currentNode.Previous;
 
             currentNode.Previous.Next = newNode;
             currentNode.Previous = newNode;
-
-            Lenght++;
         }
 
         public void Remove(object item)
@@ -119,10 +114,7 @@ namespace Epam.Mentoring.LinkedList
                 var node = GetNodeAt(i);
                 if (node.Value.Equals(item))
                 {
-
-                    //IT: code is duplicated
-                    node.Next.Previous = node.Previous;
-                    node.Previous.Next = node.Next;
+                    RemoveFromLinkedList(node);
                     Lenght--;
                     break;
                 }

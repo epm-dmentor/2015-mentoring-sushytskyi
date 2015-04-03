@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace Epam.NetMentoring.HashTable
 {
@@ -11,7 +11,7 @@ namespace Epam.NetMentoring.HashTable
         {
             var item = GetItem(key);
 
-            if (value == null)
+            if (item!=null && value == null)
             {
                 Items.Remove(item);
             }
@@ -28,25 +28,9 @@ namespace Epam.NetMentoring.HashTable
         public KeyValue GetItem(WordEntity key)
         {
             //IT: re-write using LINQ
-            foreach (KeyValue keyValuePair in Items)
-            {
-                if (keyValuePair.Key.Equals(key))
-                    return keyValuePair;
-            }
-            return null;
+            return Items.FirstOrDefault(keyValuePair => keyValuePair.Key.Equals(key));
         }
 
-        public bool Contains(WordDefinition wordD)
-        {
-            //IT: re-write using LINQ
-            foreach (KeyValue keyValuePair in Items)
-            {
-                if (keyValuePair.Value.Equals(wordD))
-                    return keyValuePair.Value;
-            }
-            return null;
-        }
-
-        public int Count { get { throw new NotImplementedException();} }
+        public int Count { get { return Items.Count; } }
     }
 }

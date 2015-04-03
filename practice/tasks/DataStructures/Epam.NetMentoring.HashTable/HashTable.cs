@@ -5,13 +5,13 @@ using System.Linq;
 namespace Epam.NetMentoring.HashTable
 {
     //IT: should be interface
-    public class HashTable
+    public class HashTable : IHashTable
     {
         private const int InitialBuketSize = 10;
         private const int MaxLoadFactor = 90;
 
         //IT: should be private . If you'd like it to expose internal it's better to use property
-        internal Bucket[] _items = new Bucket[InitialBuketSize];
+        private Bucket[] _items = new Bucket[InitialBuketSize];
 
         public WordDefinition this[WordEntity key]
         {
@@ -71,13 +71,5 @@ namespace Epam.NetMentoring.HashTable
             var result = hashCode % _items.Length;
             return result;
         }
-
-        public bool Contains(WordEntity wordDef)
-        {
-            //IT: Rework
-            throw new NotImplementedException();
-        }
-
-
     }
 }

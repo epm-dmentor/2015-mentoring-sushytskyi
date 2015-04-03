@@ -81,7 +81,7 @@ namespace Epam.NetMentoring.Testing
         [Test]
         public void ListTwoItemsAddAt2_SequenceSaved()
         {
-            const int expectedLenght = 5;
+            const int expectedLenght = 3;
             var list = new LinkedList();
             var item1 = new object();
             var item2 = new object();
@@ -300,14 +300,16 @@ namespace Epam.NetMentoring.Testing
             list.AddAt(new object(), 2);
         }
 
-        [Test, ExpectedException(typeof(ArgumentOutOfRangeException))]
+        [Test]
         public void EmptyListAddAt0_Exception()
         {
+            var expectedLenght = 1;
             var list = new LinkedList();
             var item = new object();
             list.AddAt(item, 0);
+            Assert.AreEqual(expectedLenght,list.Lenght);
+            Assert.AreEqual(item,list.FindElementAt(0));
         }
-
         [Test]
         public void List2ItemsAddAt2_SavesOrder()
         {
