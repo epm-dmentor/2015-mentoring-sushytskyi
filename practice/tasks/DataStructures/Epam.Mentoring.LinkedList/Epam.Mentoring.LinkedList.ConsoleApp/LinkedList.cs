@@ -3,19 +3,18 @@ using System.Collections;
 
 namespace Epam.Mentoring.LinkedList
 {
+    //implementation is based on cercular data structure, implemented as double linked list
     public class LinkedList : IEnumerable, ILinkedList
     {
-        //IT: what the name does mean? Is't <_head> better?
-        //IS: Use dummy node to avoid NullReference check
+        //used to determine either first or last element as we use circular data structure 
+        //and our list is double linked 
         private readonly Node _dummyNode;
         public int Lenght { get; private set; }
 
         public LinkedList()
         {
-            //IT: Wrong approach, there is a risk of infinite loop. Do not use such approache any more
-            //IT: initialy there should not be any nodes at all :) as we haven't added anything
-
-            //IS: create dummy node linked on itself with dummy value
+            //create dummy node linked on itself with dummy value
+            //IT: InitiateCercularList
             _dummyNode = new Node { Value = "DummyValue" };
             _dummyNode.Next = _dummyNode;
             _dummyNode.Previous = _dummyNode;
@@ -23,16 +22,14 @@ namespace Epam.Mentoring.LinkedList
 
         public void Add(object item)
         {
-            //IT: Never, never again! Do not use null reference exception, use ArgumentNullException and pass argument name into constructor
             if (item == null)
                 throw new ArgumentNullException("item");
 
             var newNode = new Node { Value = item };
-
-            //IT: we need to add to the end, as your approache will be changed due to previous comment this part must be re-written at all
-            //IS: Note: LastItem.next always points to dummy, dummyPrevious points to lastItem
-            //IS: If first element in the linked list
-            if (_dummyNode.Next == _dummyNode && _dummyNode.Previous == _dummyNode)
+            //Note: LastItem.next always points to dummy, dummyPrevious points to lastItem
+            //if first element in the linked list
+            if (_dummyNode.Next == _dummyNode &&
+                _dummyNode.Previous == _dummyNode)
             {
                 _dummyNode.Next = newNode;
                 newNode.Previous = _dummyNode;
@@ -44,6 +41,7 @@ namespace Epam.Mentoring.LinkedList
             else
             //If not the first item then added to the end. 
             {
+                //IT: code is duplicated
                 newNode.Next = _dummyNode;
                 newNode.Previous = _dummyNode.Previous;
                 _dummyNode.Previous.Next = newNode;
@@ -54,23 +52,19 @@ namespace Epam.Mentoring.LinkedList
 
         public void RemoveAt(int position)
         {
-            //IT: null reference exception is possisble
-            //IS: corrected
             var node = GetNodeAt(position);
 
-            //IT: due to changin an approach it will be changed, otherwise you will have null reference exception very often
-            //No need to check for NullRef, due to DummyNode circular referene.   
+            //IT: code is duplicated
             node.Next.Previous = node.Previous;
             node.Previous.Next = node.Next;
             Lenght--;
         }
 
+        //always return either real node or an exception. Null is not possible
         private Node GetNodeAt(int position)
         {
             if (position >= Lenght || position < 0)
-                //IT: more information must be provided to help debuggin people that will use your code
-                //IS: done
-                throw new ArgumentOutOfRangeException("position", "current lenght: " + Lenght);
+                throw new ArgumentOutOfRangeException(String.Format("requested position:{0}, current lenght of a linked list: {1}", position, Lenght));
 
             //IS: if list empty and _dummyNode.Next returns dummy we wont get to this part of code due to Lenght=0; checked above
             var node = _dummyNode.Next;
@@ -86,34 +80,25 @@ namespace Epam.Mentoring.LinkedList
                 i++;
             }
 
-            //IT: null refference exception is possible in a future use
-            //IS: To avoid Null Ref
-            return new Node();
+            throw new ApplicationException("Unexpected situation during finding node by a position");
         }
 
         public Object FindElementAt(int position)
         {
-            //IT: currently null reference exception is possible
-            //IS: corrected
             return GetNodeAt(position).Value;
         }
 
+        //IT: if we have 5 element, i should be able to run AddAt(..., 5)
         public void AddAt(object item, int position)
         {
-            //IT: as it was mentioned it not a cceptable      
-            //IS: corrected
             if (item == null)
                 throw new ArgumentNullException("item");
 
             var newNode = new Node();
             newNode.Value = item;
-
-            //IT: what happend if I'd like to insert to position 6 when there are 6 elements?
-            //IS: Get the node by position counting from 0 (6 items in list, last item position 5)
-            //IS: If request 6th item when we have 6 items in list will get ArgumentOutOfRangeException
             var currentNode = GetNodeAt(position);
 
-            //IS: put new node on position of current node, shift current node on the right  
+            //IT: code is duplicated
             newNode.Next = currentNode;
             newNode.Previous = currentNode.Previous;
 
@@ -134,6 +119,8 @@ namespace Epam.Mentoring.LinkedList
                 var node = GetNodeAt(i);
                 if (node.Value.Equals(item))
                 {
+
+                    //IT: code is duplicated
                     node.Next.Previous = node.Previous;
                     node.Previous.Next = node.Next;
                     Lenght--;

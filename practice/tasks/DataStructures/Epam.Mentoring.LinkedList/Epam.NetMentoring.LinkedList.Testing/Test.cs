@@ -78,6 +78,25 @@ namespace Epam.NetMentoring.Testing
             Assert.AreEqual(item4, list.FindElementAt(3));
         }
 
+        [Test]
+        public void ListTwoItemsAddAt2_SequenceSaved()
+        {
+            const int expectedLenght = 5;
+            var list = new LinkedList();
+            var item1 = new object();
+            var item2 = new object();
+            var item3 = new object();
+
+            list.Add(item1);
+            list.Add(item2);
+            list.AddAt(item3, 2);
+
+            Assert.AreEqual(expectedLenght, list.Lenght);
+            Assert.AreEqual(item1, list.FindElementAt(0));
+            Assert.AreEqual(item2, list.FindElementAt(1));
+            Assert.AreEqual(item3, list.FindElementAt(2));
+        }
+
         #endregion
 
         #region FindAt
