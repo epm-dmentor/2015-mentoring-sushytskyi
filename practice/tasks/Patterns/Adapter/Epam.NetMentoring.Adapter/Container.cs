@@ -1,10 +1,16 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace Epam.NetMentoring.Adapter
 {
     public class Container : IContainer<object>
     {
-        private readonly List<object> _items = new List<object>() { new object(), new object(), new object() };
+        private readonly IEnumerable<object> _items;
+
+        public Container(IEnumerable<object> items)
+        {
+            _items = items;
+        }
 
         public IEnumerable<object> Items
         {
@@ -14,7 +20,7 @@ namespace Epam.NetMentoring.Adapter
 
         public int Count
         {
-            get { return _items.Count; }
+            get { return _items.Count(); }
             private set { }
         }
     }

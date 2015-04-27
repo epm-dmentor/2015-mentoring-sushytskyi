@@ -2,20 +2,17 @@
 
 namespace Epam.NetMentoring.Adapter
 {
-    class AdaptedPrinter : IElements<object>
+    class ElementsContainer : IElements<object>
     {
-        private readonly IContainer<object> _container;
-        readonly Printer _adaptee = new Printer();
-
-        public AdaptedPrinter(IContainer<object> container)
+        private IEnumerable<object> items;
+        public ElementsContainer(IEnumerable<object> items)
         {
-            _container = container;
+            this.items = items;
         }
 
         public IEnumerable<object> GetElements()
         {
-            _adaptee.Print(_container);
-            return _container.Items;
+            return items;
         }
     }
 }

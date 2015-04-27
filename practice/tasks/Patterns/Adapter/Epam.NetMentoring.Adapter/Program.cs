@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Drawing;
+using System.Reflection;
 
 namespace Epam.NetMentoring.Adapter
 {
@@ -6,8 +8,11 @@ namespace Epam.NetMentoring.Adapter
     {
         static void Main(string[] args)
         {
-            var adaptedPrinter = new AdaptedPrinter(new Container());
-            adaptedPrinter.GetElements();
+            var printer = new Printer();
+            
+            var elems = new ElementsContainer(new[] {(object)new Point(1, 1), new Point(2, 20), new Point(33, 23)});
+
+            printer.Print(elems);
             Console.ReadLine();
         }
     }
