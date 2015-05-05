@@ -1,15 +1,18 @@
-﻿using System;
+﻿using System.Collections.Generic;
 
 namespace Epam.NetMentoring.Adapter
 {
-    public class Printer
+    class ElementsContainer : IElements<object>
     {
-        public void Print<T>(IContainer<T> container)
+        private IEnumerable<object> items;
+        public ElementsContainer(IEnumerable<object> items)
         {
-            foreach (var item in container.Items)
-            {
-                Console.WriteLine(item.ToString());
-            }
+            this.items = items;
+        }
+
+        public IEnumerable<object> GetElements()
+        {
+            return items;
         }
     }
 }

@@ -12,7 +12,9 @@ namespace Epam.NetMentoring.Adapter
             
             var elems = new ElementsContainer(new[] {(object)new Point(1, 1), new Point(2, 20), new Point(33, 23)});
 
-            printer.Print(elems);
+            var adapter = new Adapter(printer, elems);
+            adapter.Print();
+      //      printer.Print(elems);
             Console.ReadLine();
         }
     }
